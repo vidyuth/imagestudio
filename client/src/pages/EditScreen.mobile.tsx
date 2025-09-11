@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CornerUpLeft, Download, RotateCcw, RotateCw, Crop, Palette, Sun, Contrast, Maximize2, Minimize2, PaintBucket, Filter, Focus, Eraser, Settings, Layers, History, Menu, Sliders, Zap, Sparkles } from 'lucide-react';
+import { CornerUpLeft, Download, RotateCcw, RotateCw, Crop, Palette, Sun, Contrast, Maximize2, Minimize2, PaintBucket, Filter, Focus, Eraser, Settings, Layers, History, Menu, Sliders, Zap, Sparkles, Layers2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Card } from '../components/ui/card';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
@@ -7,6 +7,7 @@ import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from 
 import { Toggle } from '../components/ui/toggle';
 import { Slider } from '../components/ui/slider';
 import { Separator } from '../components/ui/separator';
+import { ScrollArea } from '../components/ui/scroll-area';
 import BeforeAfterSlider from '../components/BeforeAfterSlider';
 import { LABELS } from '../config/labels';
 
@@ -43,6 +44,8 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
   const [viewMode, setViewMode] = useState<'beforeAfter' | 'edit'>('beforeAfter');
   const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
+  const [isOverlayMode, setIsOverlayMode] = useState(false);
+  const [overlayOpacity, setOverlayOpacity] = useState([50]);
 
   // Mock version data - in real app this would come from props/state
   const versions = [
@@ -102,6 +105,18 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
               Edit
             </Toggle>
           </div>
+
+          {/* Overlay Toggle - Only show in before/after mode */}
+          {viewMode === 'beforeAfter' && beforeImage && afterImage && (
+            <Toggle
+              pressed={isOverlayMode}
+              onPressedChange={setIsOverlayMode}
+              size="sm"
+              className="p-2"
+            >
+              <Layers2 className="h-4 w-4" />
+            </Toggle>
+          )}
 
           {/* Right - Version History */}
           <Drawer>
@@ -184,6 +199,24 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
           </Drawer>
         </div>
       </div>
+
+      {/* Opacity Slider - Only show when overlay mode is active */}
+      {isOverlayMode && viewMode === 'beforeAfter' && beforeImage && afterImage && (
+        <div className="bg-card border-b border-border px-4 py-2 flex-shrink-0">
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground font-medium">Opacity:</span>
+            <Slider
+              value={overlayOpacity}
+              onValueChange={setOverlayOpacity}
+              max={100}
+              min={0}
+              step={1}
+              className="flex-1"
+            />
+            <span className="text-xs text-muted-foreground min-w-[3ch] font-medium">{overlayOpacity[0]}%</span>
+          </div>
+        </div>
+      )}
 
       {/* Main Content Area */}
       <div className="flex-1 bg-muted/20 relative min-h-0">
@@ -288,10 +321,77 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         <div className="h-full p-4 flex flex-col">
           {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
             <div className="flex-1 min-h-0">
-              <BeforeAfterSlider 
-                beforeImage={beforeImage}
-                afterImage={afterImage}
-              />
+              <ScrollArea className="h-full w-full rounded-lg border">
+                {isOverlayMode ? (
+                  /* Overlay Mode - Single image with opacity overlay */
+                  <div className="relative min-h-full">
+                    {/* Show After image as base when opacity is 0, otherwise show Before */}
+                    {overlayOpacity[0] === 0 ? (
+                      <img 
+                        src={afterImage} 
+                        alt="After" 
+                        className="w-full h-auto min-h-full object-contain"
+                      />
+                    ) : (
+                      <>
+                        {/* Base Image (Before) */}
+                        <img 
+                          src={beforeImage} 
+                          alt="Before" 
+                          className="w-full h-auto min-h-full object-contain"
+                        />
+                        
+                        {/* Overlay Image (After) with opacity */}
+                        <div 
+                          className="absolute inset-0"
+                          style={{ opacity: overlayOpacity[0] / 100 }}
+                        >
+                          <img 
+                            src={afterImage} 
+                            alt="After" 
+                            className="w-full h-auto min-h-full object-contain"
+                          />
+                        </div>
+                      </>
+                    )}
+                    
+                    {/* Fixed Labels with percentages - only in overlay mode */}
+                    <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                      Before ({100 - overlayOpacity[0]}%)
+                    </div>
+                    <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                      After ({overlayOpacity[0]}%)
+                    </div>
+                  </div>
+                ) : (
+                  /* Side-by-Side Mode - when overlay is OFF */
+                  <div className="grid grid-cols-2 gap-0 min-h-full">
+                    {/* Before Image Section */}
+                    <div className="relative border-r border-border">
+                      <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                        Before
+                      </div>
+                      <img 
+                        src={beforeImage} 
+                        alt="Before" 
+                        className="w-full h-auto min-h-full object-cover"
+                      />
+                    </div>
+                    
+                    {/* After Image Section */}
+                    <div className="relative">
+                      <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                        After
+                      </div>
+                      <img 
+                        src={afterImage} 
+                        alt="After" 
+                        className="w-full h-auto min-h-full object-cover"
+                      />
+                    </div>
+                  </div>
+                )}
+              </ScrollArea>
             </div>
           ) : (
             <div className="flex-1 flex items-center justify-center">
