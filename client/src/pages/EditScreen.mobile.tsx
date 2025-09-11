@@ -186,7 +186,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       </div>
 
       {/* Main Content Area */}
-      <div className="flex-1 bg-muted/20 relative overflow-hidden">
+      <div className="flex-1 bg-muted/20 relative min-h-0">
         {/* Floating Left Tool Panel - Only visible in Edit mode */}
         {viewMode === 'edit' && (
           <Sheet>
@@ -285,16 +285,16 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         )}
 
         {/* Central Image Area */}
-        <div className="absolute inset-0 p-4">
+        <div className="h-full p-4 flex flex-col">
           {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
-            <div className="w-full h-full">
+            <div className="flex-1 min-h-0">
               <BeforeAfterSlider 
                 beforeImage={beforeImage}
                 afterImage={afterImage}
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center">
               <Card className="aspect-square bg-muted border-2 border-dashed border-muted-foreground/25 flex items-center justify-center max-w-md w-full">
                 <div className="text-center text-muted-foreground p-6">
                   <p className="text-sm font-medium mb-2">
