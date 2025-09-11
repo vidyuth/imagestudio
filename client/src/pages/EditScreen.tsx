@@ -137,7 +137,8 @@ export default function EditScreen({ onBack, prompt = "", beforeImage = "", afte
           <div className="p-4 border-t border-border bg-background">
             <div className="max-w-4xl mx-auto flex justify-center">
               <Button className="bg-primary text-primary-foreground" data-testid="button-download-version">
-                Download This Version
+                <Download className="h-4 w-4 mr-2" />
+                {activeTab === "beforeAfter" ? "Download AI Result" : "Download Edited Version"}
               </Button>
             </div>
           </div>
@@ -203,7 +204,8 @@ export default function EditScreen({ onBack, prompt = "", beforeImage = "", afte
                 {/* Action Buttons */}
                 <div className="space-y-2">
                   <Button className="w-full bg-primary text-primary-foreground" data-testid="button-download">
-                    Download
+                    <Download className="h-4 w-4 mr-2" />
+                    Download This Version
                   </Button>
                   <Button variant="outline" className="w-full" data-testid="button-edit-image">
                     Edit this image

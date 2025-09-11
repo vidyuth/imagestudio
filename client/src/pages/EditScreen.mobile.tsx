@@ -165,7 +165,8 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
                 {/* Action Buttons */}
                 <div className="pt-4 space-y-2">
                   <Button className="w-full bg-primary text-primary-foreground">
-                    Download
+                    <Download className="h-4 w-4 mr-2" />
+                    Download This Version
                   </Button>
                   <Button className="w-full" variant="outline">
                     Edit this image
@@ -314,7 +315,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       <div className="bg-card border-t border-border p-4 pb-8">
         <Button className="w-full bg-primary text-primary-foreground">
           <Download className="h-4 w-4 mr-2" />
-          Download This Version
+          {viewMode === 'beforeAfter' ? 'Download AI Result' : 'Download Edited Version'}
         </Button>
       </div>
     </div>
