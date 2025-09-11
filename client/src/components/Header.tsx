@@ -40,7 +40,7 @@ export default function Header() {
 
   return (
     <header className="border-b border-border bg-background px-4 sm:px-6 lg:px-8 h-14 sm:h-16">
-      <div className="grid grid-cols-[auto_1fr_auto] items-center h-full max-w-7xl mx-auto">
+      <div className="flex items-center justify-between h-full max-w-7xl mx-auto">
         {/* Logo */}
         <div className="flex items-center">
           <Link href="/">
@@ -51,7 +51,7 @@ export default function Header() {
         </div>
 
         {/* Desktop Navigation - Hidden on mobile */}
-        <nav className="hidden lg:flex items-center justify-self-center">
+        <nav className="hidden lg:flex items-center">
           <div className="flex items-center space-x-8">
             <Link href="/features">
               <span className="text-foreground hover:text-primary transition-colors" data-testid="link-features">
@@ -72,8 +72,8 @@ export default function Header() {
         </nav>
             
         {/* Right side - Theme + Auth + Mobile Menu */}
-        <div className="flex items-center gap-3 sm:gap-4">
-          {/* Theme Switcher */}
+        <div className="flex items-center gap-2 sm:gap-4">
+          {/* Theme Switcher - Always visible */}
           <Button
             ref={buttonRef}
             onClick={toggleTheme}
@@ -89,9 +89,14 @@ export default function Header() {
               <Moon className="h-4 w-4" />
             )}
           </Button>
+
+          {/* Mobile Sign Up Button - Visible on mobile */}
+          <Button size="sm" className="lg:hidden text-xs px-3" data-testid="mobile-button-signup">
+            {LABELS.AUTH.SIGN_UP}
+          </Button>
           
           {/* Desktop Auth Buttons */}
-          <div className="hidden sm:flex items-center space-x-2">
+          <div className="hidden lg:flex items-center space-x-2">
             <Button variant="outline" size="sm" data-testid="button-login">
               {LABELS.AUTH.LOGIN}
             </Button>
@@ -104,7 +109,7 @@ export default function Header() {
           <Button
             variant="ghost"
             size="icon"
-            className="lg:hidden w-8 h-8 sm:w-9 sm:h-9"
+            className="lg:hidden w-8 h-8"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             aria-label="Toggle mobile menu"
           >
@@ -119,10 +124,10 @@ export default function Header() {
 
       {/* Mobile Menu Dropdown */}
       {isMobileMenuOpen && (
-        <div className="lg:hidden border-t border-border bg-background">
-          <div className="px-4 py-3 space-y-3">
+        <div className="lg:hidden border-t border-border bg-background shadow-lg relative z-50">
+          <div className="px-4 py-4 space-y-4 bg-background">
             {/* Mobile Navigation Links */}
-            <div className="space-y-2">
+            <div className="space-y-3">
               <Link href="/features">
                 <div className="block py-2 text-foreground hover:text-primary transition-colors" data-testid="mobile-link-features">
                   {LABELS.NAV.FEATURES}
@@ -140,13 +145,13 @@ export default function Header() {
               </Link>
             </div>
             
-            {/* Mobile Auth Buttons */}
-            <div className="pt-3 border-t border-border">
-              <div className="flex flex-col space-y-2 sm:hidden">
-                <Button variant="outline" size="sm" className="w-full" data-testid="mobile-button-login">
+            {/* Mobile Auth Section */}
+            <div className="pt-4 border-t border-border">
+              <div className="flex flex-col space-y-3">
+                <Button variant="outline" size="sm" className="w-full justify-center" data-testid="mobile-button-login">
                   {LABELS.AUTH.LOGIN}
                 </Button>
-                <Button size="sm" className="w-full" data-testid="mobile-button-signup">
+                <Button size="sm" className="w-full justify-center" data-testid="mobile-button-signup-full">
                   {LABELS.AUTH.SIGN_UP}
                 </Button>
               </div>
