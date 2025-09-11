@@ -22,7 +22,7 @@ export default function BeforeAfterSlider({ beforeImage, afterImage }: BeforeAft
   return (
     <div 
       ref={containerRef}
-      className="relative w-full h-96 overflow-hidden rounded-lg bg-muted cursor-ew-resize"
+      className="relative w-full h-full overflow-hidden rounded-lg bg-muted cursor-ew-resize"
       onMouseMove={handleMouseMove}
       data-testid="before-after-slider"
     >

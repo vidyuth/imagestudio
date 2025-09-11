@@ -280,15 +280,17 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         )}
 
         {/* Central Image Area */}
-        <div className="absolute inset-0 flex items-center justify-center p-16">
-          <div className="w-full max-w-md mx-auto">
-            {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
+        <div className="absolute inset-0 p-4">
+          {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
+            <div className="w-full h-full">
               <BeforeAfterSlider 
                 beforeImage={beforeImage}
                 afterImage={afterImage}
               />
-            ) : (
-              <Card className="aspect-square bg-muted border-2 border-dashed border-muted-foreground/25 flex items-center justify-center">
+            </div>
+          ) : (
+            <div className="w-full h-full flex items-center justify-center">
+              <Card className="aspect-square bg-muted border-2 border-dashed border-muted-foreground/25 flex items-center justify-center max-w-md w-full">
                 <div className="text-center text-muted-foreground p-6">
                   <p className="text-sm font-medium mb-2">
                     {viewMode === 'edit' ? 'Image Editor' : 'Before & After'}
@@ -303,13 +305,13 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
                   </p>
                 </div>
               </Card>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       </div>
 
       {/* Bottom Download Button */}
-      <div className="bg-card border-t border-border p-4">
+      <div className="bg-card border-t border-border p-4 pb-8">
         <Button className="w-full bg-primary text-primary-foreground">
           <Download className="h-4 w-4 mr-2" />
           Download This Version

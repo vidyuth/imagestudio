@@ -104,14 +104,16 @@ export default function EditScreen({ onBack, prompt = "", beforeImage = "", afte
           {/* Image Area */}
           <div className="flex-1 bg-muted/20 relative">
             <div className="absolute inset-0 flex items-center justify-center p-4">
-              <div className="w-full max-w-4xl mx-auto">
+              <div className="w-full h-full flex items-center justify-center">
                 {activeTab === "beforeAfter" && beforeImage && afterImage ? (
-                  <BeforeAfterSlider 
-                    beforeImage={beforeImage}
-                    afterImage={afterImage}
-                  />
+                  <div className="w-full h-full max-h-[80vh]">
+                    <BeforeAfterSlider 
+                      beforeImage={beforeImage}
+                      afterImage={afterImage}
+                    />
+                  </div>
                 ) : (
-                  <div className="aspect-video bg-muted rounded-lg border-2 border-dashed border-muted-foreground/25 flex items-center justify-center">
+                  <div className="aspect-video bg-muted rounded-lg border-2 border-dashed border-muted-foreground/25 flex items-center justify-center max-w-4xl w-full">
                     <div className="text-center text-muted-foreground">
                       <p className="text-lg font-medium mb-2">
                         {activeTab === "edit" ? "Image Editor Area" : "Before & After View"}
