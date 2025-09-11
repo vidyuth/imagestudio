@@ -67,7 +67,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Tab Bar - Right after header */}
       <div className="bg-card border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
@@ -181,8 +181,8 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         </div>
       </div>
 
-      {/* Main Content Area */}
-      <div className="flex-1 relative bg-muted/20">
+      {/* Main Content Area - Fixed height */}
+      <div className="flex-1 relative bg-muted/20 flex flex-col min-h-0">
         {/* Floating Left Tool Panel - Only visible in Edit mode */}
         {viewMode === 'edit' && (
           <Sheet>
@@ -281,7 +281,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         )}
 
         {/* Central Image Area */}
-        <div className="absolute inset-0 p-4">
+        <div className="flex-1 p-4 min-h-0">
           {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
             <div className="w-full h-full">
               <BeforeAfterSlider 
@@ -312,7 +312,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       </div>
 
       {/* Bottom Download Button */}
-      <div className="bg-card border-t border-border p-4 pb-8">
+      <div className="bg-card border-t border-border p-4 pb-8 shrink-0">
         <Button className="w-full bg-primary text-primary-foreground">
           <Download className="h-4 w-4 mr-2" />
           {viewMode === 'beforeAfter' ? 'Download AI Result' : 'Download Edited Version'}
