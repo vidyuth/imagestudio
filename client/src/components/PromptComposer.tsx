@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import { LABELS } from "@/config/labels";
 
 interface PromptComposerProps {
   onStageIt: (prompt: string) => void;
@@ -22,11 +23,11 @@ export default function PromptComposer({ onStageIt, disabled = false }: PromptCo
     <div className="w-full space-y-4" data-testid="prompt-composer">
       <div className="space-y-2">
         <Label htmlFor="prompt" className="text-sm font-medium text-foreground">
-          How do you want to edit this picture?
+          {LABELS.PROMPT_COMPOSER.LABEL}
         </Label>
         <Textarea
           id="prompt"
-          placeholder="e.g. Add some nice furniture..."
+          placeholder={LABELS.PROMPT_COMPOSER.PLACEHOLDER}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
           className="min-h-[100px] resize-none"
@@ -41,7 +42,7 @@ export default function PromptComposer({ onStageIt, disabled = false }: PromptCo
         className="w-full"
         data-testid="button-stage-it"
       >
-        Stage It
+        {LABELS.ACTIONS.STAGE_IT}
       </Button>
     </div>
   );

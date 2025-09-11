@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LABELS } from "@/config/labels";
 
 interface UploadedFile {
   file: File;
@@ -24,7 +25,7 @@ export default function ImageUpload({ onFilesChange }: ImageUploadProps) {
     );
     
     if (validFiles.length + uploadedFiles.length > 2) {
-      console.log('Maximum 2 images allowed');
+      console.log(LABELS.IMAGE_UPLOAD.MAX_FILES_MESSAGE);
       return;
     }
 
@@ -61,7 +62,7 @@ export default function ImageUpload({ onFilesChange }: ImageUploadProps) {
     <div className="w-full space-y-4">
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-12 text-center transition-colors ${
+        className={`relative border-2 border-dashed rounded-lg p-6 sm:p-8 lg:p-12 text-center transition-colors ${
           isDragOver 
             ? 'border-primary bg-accent/50' 
             : 'border-border hover:border-primary/50'
@@ -81,26 +82,27 @@ export default function ImageUpload({ onFilesChange }: ImageUploadProps) {
           data-testid="input-file"
         />
         
-        <div className="flex flex-col items-center space-y-4">
-          <div className="w-12 h-12 rounded-full bg-muted flex items-center justify-center">
-            <Upload className="w-6 h-6 text-muted-foreground" />
+        <div className="flex flex-col items-center space-y-3 sm:space-y-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-muted flex items-center justify-center">
+            <Upload className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground" />
           </div>
           
-          <div className="space-y-2">
-            <h3 className="text-lg font-medium text-foreground">
-              Browse images to upload
+          <div className="space-y-1 sm:space-y-2">
+            <h3 className="text-base sm:text-lg font-medium text-foreground">
+              {LABELS.IMAGE_UPLOAD.TITLE}
             </h3>
-            <p className="text-sm text-muted-foreground">
-              PNG, JPG, WEBP • Max 2 images
+            <p className="text-sm text-muted-foreground px-2">
+              {LABELS.IMAGE_UPLOAD.DESCRIPTION}
             </p>
           </div>
           
           <Button 
             onClick={openFilePicker}
             variant="outline"
+            className="mt-3 sm:mt-4"
             data-testid="button-browse"
           >
-            Browse Files
+            {LABELS.ACTIONS.BROWSE_FILES}
           </Button>
         </div>
       </div>
