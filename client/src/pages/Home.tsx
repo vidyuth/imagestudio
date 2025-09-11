@@ -6,8 +6,7 @@ import ImageUpload from "@/components/ImageUpload";
 import FileCard from "@/components/FileCard";
 import RoomPresets from "@/components/RoomPresets";
 import PromptComposer from "@/components/PromptComposer";
-import BeforeAfterSlider from "@/components/BeforeAfterSlider";
-import ImageToolbar from "@/components/ImageToolbar";
+import EditScreen from "@/pages/EditScreen";
 
 interface UploadedFile {
   file: File;
@@ -41,20 +40,6 @@ export default function Home() {
   const handleBackToUpload = () => {
     setCurrentScreen('upload');
   };
-
-  // Mock handlers for edit screen
-  const handleDownload = () => console.log('Download clicked');
-  const handleShare = () => console.log('Share clicked');
-  const handleReset = () => {
-    console.log('Reset clicked');
-    setCurrentScreen('upload');
-  };
-  const handleUndo = () => console.log('Undo clicked');
-  const handleRedo = () => console.log('Redo clicked');
-
-  // Mock images for before/after slider
-  const beforeImage = uploadedFiles[0]?.preview || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjFGNUY5Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM3NDhBIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPk9yaWdpbmFsIEltYWdlPC90ZXh0Pgo8L3N2Zz4=';
-  const afterImage = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkJFQ0IzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPkVkaXRlZCBJbWFnZTwvdGV4dD4KPC9zdmc+';
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
@@ -115,45 +100,12 @@ export default function Home() {
                 transition={{ duration: 0.3, ease: "easeInOut" }}
                 className="absolute inset-0"
               >
-                <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-                  {/* Back Button */}
-                  <div>
-                    <button
-                      onClick={handleBackToUpload}
-                      className="text-primary hover:text-primary/80 transition-colors"
-                      data-testid="button-back"
-                    >
-                      ← Back to Upload
-                    </button>
-                  </div>
-                  
-                  {/* Image Toolbar */}
-                  <div data-testid="toolbar-section">
-                    <ImageToolbar 
-                      onDownload={handleDownload}
-                      onShare={handleShare}
-                      onReset={handleReset}
-                      onUndo={handleUndo}
-                      onRedo={handleRedo}
-                    />
-                  </div>
-                  
-                  {/* Before/After Slider */}
-                  <div data-testid="slider-section">
-                    <BeforeAfterSlider 
-                      beforeImage={beforeImage}
-                      afterImage={afterImage}
-                    />
-                  </div>
-                  
-                  {/* Prompt Display */}
-                  <div className="bg-card border border-card-border rounded-lg p-4">
-                    <h3 className="text-sm font-medium text-foreground mb-2">
-                      Applied Prompt:
-                    </h3>
-                    <p className="text-muted-foreground">{prompt}</p>
-                  </div>
-                </div>
+                <EditScreen 
+                  onBack={handleBackToUpload}
+                  prompt={prompt}
+                  beforeImage={uploadedFiles[0]?.preview || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjFGNUY5Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM3NDhBIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPk9yaWdpbmFsIEltYWdlPC90ZXh0Pgo8L3N2Zz4='}
+                  afterImage='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkJFQ0IzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPkVkaXRlZCBJbWFnZTwvdGV4dD4KPC9zdmc+'
+                />
               </motion.div>
             )}
           </AnimatePresence>
