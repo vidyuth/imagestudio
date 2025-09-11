@@ -67,7 +67,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
   ];
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="h-screen bg-background grid grid-rows-[auto_1fr_auto]">
       {/* Tab Bar - Right after header */}
       <div className="bg-card border-b border-border px-4 py-3">
         <div className="flex items-center justify-between">
@@ -182,7 +182,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       </div>
 
       {/* Main Content Area - Fixed height */}
-      <div className="flex-1 relative bg-muted/20 flex flex-col min-h-0">
+      <div className="bg-muted/20 relative overflow-hidden">
         {/* Floating Left Tool Panel - Only visible in Edit mode */}
         {viewMode === 'edit' && (
           <Sheet>
@@ -281,7 +281,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         )}
 
         {/* Central Image Area */}
-        <div className="flex-1 p-4 min-h-0">
+        <div className="absolute inset-0 p-4">
           {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
             <div className="w-full h-full">
               <BeforeAfterSlider 
