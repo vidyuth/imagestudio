@@ -30,6 +30,10 @@ export default function EditScreen({ onBack, prompt = "", beforeImage = "", afte
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Debug indicator for desktop */}
+      <div className="fixed top-0 right-0 bg-red-500 text-white px-2 py-1 text-xs z-50">
+        DESKTOP
+      </div>
       {/* Header */}
       <header className="border-b border-border bg-background">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
