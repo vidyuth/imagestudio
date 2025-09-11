@@ -2,6 +2,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowLeft, History, MousePointer2, PaintRoller, Download, Trash2, RotateCcw, Share, Undo2, Redo2 } from "lucide-react";
 import BeforeAfterSlider from "@/components/BeforeAfterSlider";
+import EditScreenMobile from "./EditScreen.mobile";
+import { useIsMobile } from "../hooks/use-mobile";
 
 interface EditScreenProps {
   onBack: () => void;
@@ -12,6 +14,19 @@ interface EditScreenProps {
 
 export default function EditScreen({ onBack, prompt = "", beforeImage = "", afterImage = "" }: EditScreenProps) {
   const [activeTab, setActiveTab] = useState<"edit" | "beforeAfter">("edit");
+  const isMobile = useIsMobile();
+
+  // Use mobile version on mobile devices
+  if (isMobile) {
+    return (
+      <EditScreenMobile 
+        onBack={onBack}
+        prompt={prompt}
+        beforeImage={beforeImage}
+        afterImage={afterImage}
+      />
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
