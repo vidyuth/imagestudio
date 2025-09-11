@@ -4,7 +4,7 @@
 
 /* LIGHT MODE - Claude Theme */
 :root {
-  --button-outline: rgba(0, 0, 0, .10);
+  --button-outline: hsl(38 85% 67% / 0.30);
   --badge-outline: rgba(0, 0, 0, .05);
 
   /* Automatic computation of border around primary / danger buttons */
@@ -15,40 +15,40 @@
   --elevate-1: rgba(0, 0, 0, .03);
   --elevate-2: rgba(0, 0, 0, .08);
 
-  --background: oklch(0.9818 0.0054 95.0986);
-  --foreground: oklch(0.3438 0.0269 95.7226);
-  --border: oklch(0.8847 0.0069 97.3627);
-  --card: oklch(0.9818 0.0054 95.0986);
-  --card-foreground: oklch(0.1908 0.0020 106.5859);
-  --card-border: oklch(0.8847 0.0069 97.3627);
-  --sidebar: oklch(0.9663 0.0080 98.8792);
-  --sidebar-foreground: oklch(0.3590 0.0051 106.6524);
-  --sidebar-border: oklch(0.9401 0 0);
-  --sidebar-primary: oklch(0.6171 0.1375 39.0427);
-  --sidebar-primary-foreground: oklch(0.9881 0 0);
-  --sidebar-accent: oklch(0.9245 0.0138 92.9892);
-  --sidebar-accent-foreground: oklch(0.3250 0 0);
-  --sidebar-ring: oklch(0.7731 0 0);
-  --popover: oklch(1.0000 0 0);
-  --popover-foreground: oklch(0.2671 0.0196 98.9390);
-  --popover-border: oklch(0.8847 0.0069 97.3627);
-  --primary: oklch(0.6171 0.1375 39.0427);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.9245 0.0138 92.9892);
-  --secondary-foreground: oklch(0.4334 0.0177 98.6048);
-  --muted: oklch(0.9341 0.0153 90.2390);
-  --muted-foreground: oklch(0.6059 0.0075 97.4233);
-  --accent: oklch(0.9245 0.0138 92.9892);
-  --accent-foreground: oklch(0.2671 0.0196 98.9390);
-  --destructive: oklch(0.1908 0.0020 106.5859);
-  --destructive-foreground: oklch(1.0000 0 0);
-  --input: oklch(0.7621 0.0156 98.3528);
-  --ring: oklch(0.6171 0.1375 39.0427);
-  --chart-1: oklch(0.5583 0.1276 42.9956);
-  --chart-2: oklch(0.6898 0.1581 290.4107);
-  --chart-3: oklch(0.8816 0.0276 93.1280);
-  --chart-4: oklch(0.8822 0.0403 298.1792);
-  --chart-5: oklch(0.5608 0.1348 42.0584);
+  --background: 30 3% 98%;
+  --foreground: 17 11% 18%;
+  --border: 17 7% 88%;
+  --card: 30 3% 98%;
+  --card-foreground: 17 5% 12%;
+  --card-border: 17 7% 88%;
+  --sidebar: 30 5% 96%;
+  --sidebar-foreground: 17 6% 22%;
+  --sidebar-border: 0 0% 94%;
+  --sidebar-primary: 38 95% 62%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 17 10% 92%;
+  --sidebar-accent-foreground: 0 0% 32%;
+  --sidebar-ring: 0 0% 77%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 17 8% 26%;
+  --popover-border: 17 7% 88%;
+  --primary: 38 95% 62%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 17 10% 92%;
+  --secondary-foreground: 17 8% 43%;
+  --muted: 17 8% 93%;
+  --muted-foreground: 17 6% 60%;
+  --accent: 17 10% 92%;
+  --accent-foreground: 17 8% 26%;
+  --destructive: 0 72% 51%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 17 8% 76%;
+  --ring: 38 95% 62%;
+  --chart-1: 38 90% 55%;
+  --chart-2: 270 80% 69%;
+  --chart-3: 17 15% 88%;
+  --chart-4: 280 65% 88%;
+  --chart-5: 38 85% 56%;
 
   --font-sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
   --font-serif: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
@@ -98,7 +98,7 @@
 
 /* DARK MODE - Claude Theme */
 .dark {
-  --button-outline: rgba(255, 255, 255, .10);
+  --button-outline: hsl(38 85% 67% / 0.30);
   --badge-outline: rgba(255, 255, 255, .05);
 
   --opaque-button-border-intensity: 9;
@@ -108,40 +108,40 @@
   --elevate-1: rgba(255, 255, 255, .04);
   --elevate-2: rgba(255, 255, 255, .09);
 
-  --background: oklch(0.2679 0.0036 106.6427);
-  --foreground: oklch(0.8074 0.0142 93.0137);
-  --border: oklch(0.3618 0.0101 106.8928);
-  --card: oklch(0.2679 0.0036 106.6427);
-  --card-foreground: oklch(0.9818 0.0054 95.0986);
-  --card-border: oklch(0.3618 0.0101 106.8928);
-  --sidebar: oklch(0.2357 0.0024 67.7077);
-  --sidebar-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-border: oklch(0.9401 0 0);
-  --sidebar-primary: oklch(0.3250 0 0);
-  --sidebar-primary-foreground: oklch(0.9881 0 0);
-  --sidebar-accent: oklch(0.1680 0.0020 106.6177);
-  --sidebar-accent-foreground: oklch(0.8074 0.0142 93.0137);
-  --sidebar-ring: oklch(0.7731 0 0);
-  --popover: oklch(0.3085 0.0035 106.6039);
-  --popover-foreground: oklch(0.9211 0.0040 106.4781);
-  --popover-border: oklch(0.3618 0.0101 106.8928);
-  --primary: oklch(0.6724 0.1308 38.7559);
-  --primary-foreground: oklch(1.0000 0 0);
-  --secondary: oklch(0.9818 0.0054 95.0986);
-  --secondary-foreground: oklch(0.3085 0.0035 106.6039);
-  --muted: oklch(0.2213 0.0038 106.7070);
-  --muted-foreground: oklch(0.7713 0.0169 99.0657);
-  --accent: oklch(0.2130 0.0078 95.4245);
-  --accent-foreground: oklch(0.9663 0.0080 98.8792);
-  --destructive: oklch(0.6368 0.2078 25.3313);
-  --destructive-foreground: oklch(1.0000 0 0);
-  --input: oklch(0.4336 0.0113 100.2195);
-  --ring: oklch(0.6724 0.1308 38.7559);
-  --chart-1: oklch(0.5583 0.1276 42.9956);
-  --chart-2: oklch(0.6898 0.1581 290.4107);
-  --chart-3: oklch(0.2130 0.0078 95.4245);
-  --chart-4: oklch(0.3074 0.0516 289.3230);
-  --chart-5: oklch(0.5608 0.1348 42.0584);
+  --background: 17 5% 16%;
+  --foreground: 17 8% 80%;
+  --border: 17 8% 35%;
+  --card: 17 5% 16%;
+  --card-foreground: 30 3% 98%;
+  --card-border: 17 8% 35%;
+  --sidebar: 17 4% 14%;
+  --sidebar-foreground: 17 8% 80%;
+  --sidebar-border: 0 0% 94%;
+  --sidebar-primary: 0 0% 32%;
+  --sidebar-primary-foreground: 0 0% 100%;
+  --sidebar-accent: 17 5% 10%;
+  --sidebar-accent-foreground: 17 8% 80%;
+  --sidebar-ring: 0 0% 77%;
+  --popover: 17 5% 18%;
+  --popover-foreground: 17 6% 92%;
+  --popover-border: 17 8% 35%;
+  --primary: 38 85% 67%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 30 3% 98%;
+  --secondary-foreground: 17 5% 18%;
+  --muted: 17 6% 13%;
+  --muted-foreground: 17 10% 77%;
+  --accent: 17 5% 13%;
+  --accent-foreground: 30 5% 96%;
+  --destructive: 0 75% 64%;
+  --destructive-foreground: 0 0% 100%;
+  --input: 17 8% 43%;
+  --ring: 38 85% 67%;
+  --chart-1: 38 90% 55%;
+  --chart-2: 270 80% 69%;
+  --chart-3: 17 5% 13%;
+  --chart-4: 280 65% 30%;
+  --chart-5: 38 85% 56%;
 
   --shadow-2xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
   --shadow-xs: 0 1px 3px 0px hsl(0 0% 0% / 0.05);
