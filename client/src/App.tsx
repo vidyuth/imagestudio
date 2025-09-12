@@ -6,12 +6,18 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Home from "@/pages/Home";
 import NotFound from "@/pages/not-found";
 import TestMobileEditScreen from "@/pages/TestMobileEditScreen";
+import TestDesktopEditScreen from "@/pages/TestDesktopEditScreen";
+
+function TestDesktopWrapper() {
+  return <TestDesktopEditScreen />;
+}
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/test-mobile" component={TestMobileEditScreen} />
+      <Route path="/test-desktop" component={TestDesktopWrapper} />
       <Route component={NotFound} />
     </Switch>
   );

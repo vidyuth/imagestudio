@@ -1,0 +1,281 @@
+import React, { useState } from 'react';
+import { 
+  CornerUpLeft, 
+  Download, 
+  History, 
+  PaintRoller, 
+  Eraser, 
+  Wand2,
+  GalleryVerticalEnd,
+  X 
+} from 'lucide-react';
+import { Button } from '../components/ui/button';
+import { Textarea } from '../components/ui/textarea';
+import { Separator } from '../components/ui/separator';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import {
+  ReactCompareSlider,
+  ReactCompareSliderImage,
+  ReactCompareSliderHandle,
+} from 'react-compare-slider';
+
+interface TestDesktopEditScreenProps {
+  onBack?: () => void;
+  prompt?: string;
+  beforeImage?: string;
+  afterImage?: string;
+}
+
+export default function TestDesktopEditScreen({ 
+  onBack, 
+  prompt = "Remove this frame on the door, its placed on the door", 
+  beforeImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjFGNUY5Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM3NDhBIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPk9yaWdpbmFsIEltYWdlPC90ZXh0Pgo8L3N2Zz4=",
+  afterImage = "data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkJFQ0IzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPkVkaXRlZCBJbWFnZTwvdGV4dD4KPC9zdmc+"
+}: TestDesktopEditScreenProps) {
+  const [selectedVersion, setSelectedVersion] = useState<number>(1);
+  const [editPrompt, setEditPrompt] = useState<string>("");
+  const [showHistory, setShowHistory] = useState<boolean>(true);
+
+  // Mock version data
+  const versions = [
+    { 
+      id: 1, 
+      name: 'Edit #1', 
+      prompt: prompt,
+      image: beforeImage
+    },
+    { 
+      id: 2, 
+      name: 'Edit #2', 
+      prompt: 'Enhance lighting and contrast',
+      image: beforeImage
+    },
+    { 
+      id: 3, 
+      name: 'Edit #3', 
+      prompt: 'Add warm color tone',
+      image: beforeImage
+    }
+  ];
+
+  const handleBack = () => {
+    console.log('Back clicked');
+    if (onBack) onBack();
+  };
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Debug indicator for desktop test */}
+      <div className="fixed top-0 right-0 bg-blue-500 text-white px-2 py-1 text-xs z-50">
+        DESKTOP TEST
+      </div>
+
+      {/* Sticky Header */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between h-14">
+            <div className="flex items-center">
+              <span className="text-lg font-bold text-primary">ImageStudio</span>
+            </div>
+            <div className="flex items-center gap-4">
+              <Button variant="ghost" size="sm">Theme</Button>
+              <Button variant="ghost" size="sm">Help</Button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <div className="max-w-7xl mx-auto p-6">
+        <div className="border rounded-md p-4 flex flex-col gap-4">
+          
+          {/* Toolbar */}
+          <header className="flex justify-between items-start gap-2">
+            <Button variant="outline" onClick={handleBack}>
+              <CornerUpLeft className="mr-2 h-4 w-4" />
+              Create a New Stage
+            </Button>
+            <div className="flex items-center gap-2">
+              <div className="flex items-center gap-4">
+                <Button variant="ghost" size="icon" aria-label="Paint Roller">
+                  <PaintRoller className="h-4 w-4" />
+                </Button>
+                <Button variant="ghost" size="icon" aria-label="Eraser">
+                  <Eraser className="h-4 w-4" />
+                </Button>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  aria-label="Version History"
+                  onClick={() => setShowHistory(!showHistory)}
+                >
+                  <History className="h-4 w-4" />
+                </Button>
+              </div>
+              <Button size="sm">
+                <Download className="mr-2 h-4 w-4" />
+                Download
+              </Button>
+            </div>
+          </header>
+
+          <Separator />
+
+          {/* Main Content Area */}
+          <main className="flex gap-4">
+            {/* Image Area */}
+            <div className="flex-1 flex flex-col gap-4">
+              {/* Image Display */}
+              <div className="rounded-md overflow-hidden bg-muted border">
+                {beforeImage && afterImage ? (
+                  <ReactCompareSlider
+                    itemOne={
+                      <ReactCompareSliderImage
+                        src={beforeImage}
+                        alt="Before"
+                        style={{ objectFit: 'contain', height: '400px' }}
+                      />
+                    }
+                    itemTwo={
+                      <ReactCompareSliderImage
+                        src={afterImage}
+                        alt="After"
+                        style={{ objectFit: 'contain', height: '400px' }}
+                      />
+                    }
+                    handle={<ReactCompareSliderHandle style={{color: 'white'}}/>}
+                  />
+                ) : (
+                  <div className="w-full h-96 flex items-center justify-center">
+                    <img 
+                      src={afterImage || beforeImage} 
+                      alt="Image" 
+                      className="max-w-full max-h-full object-contain" 
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Prompt Composer */}
+              <div className="flex flex-col gap-3">
+                <Textarea
+                  placeholder="Use the paintbrush to select an area on the photo"
+                  value={editPrompt}
+                  onChange={(e) => setEditPrompt(e.target.value)}
+                  className="w-full bg-muted border-0 rounded-lg resize-none"
+                  rows={3}
+                />
+                <div className="flex gap-2">
+                  <Button variant="secondary" className="flex-1">
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    Update
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* History Panel - Conditional */}
+            {showHistory && (
+              <>
+                <Separator orientation="vertical" />
+                <aside className="w-[291px] bg-sidebar rounded-md flex flex-col pb-2">
+                  {/* History Panel Header */}
+                  <div className="p-2">
+                    <div className="flex items-center justify-between p-2">
+                      <div className="flex items-center gap-2">
+                        <div className="bg-sidebar-primary text-sidebar-primary-foreground rounded-lg p-2 flex items-center justify-center h-8 w-8">
+                          <GalleryVerticalEnd className="h-4 w-4" />
+                        </div>
+                        <div>
+                          <h3 className="text-sm font-semibold text-sidebar-foreground">History</h3>
+                          <p className="text-xs text-sidebar-foreground tracking-wide">v1.0.1</p>
+                        </div>
+                      </div>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="text-sidebar-foreground" 
+                        aria-label="Close History"
+                        onClick={() => setShowHistory(false)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* History Panel Content */}
+                  <div className="px-2 flex-grow">
+                    <Card className="w-full h-full flex flex-col border bg-card text-card-foreground">
+                      <CardHeader className="p-6 pb-4">
+                        <CardTitle className="text-base font-medium">Reference Image</CardTitle>
+                        <CardDescription className="text-sm pt-1.5 text-muted-foreground">
+                          Your prompt: <br /> {versions[selectedVersion - 1]?.prompt}
+                        </CardDescription>
+                      </CardHeader>
+                      
+                      <CardContent className="p-4 flex-grow flex flex-col items-center gap-2">
+                        {/* Large Preview */}
+                        <div className="w-full aspect-square relative bg-muted rounded-md overflow-hidden">
+                          {versions[selectedVersion - 1]?.image ? (
+                            <img
+                              src={versions[selectedVersion - 1].image}
+                              alt="Reference Image"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                              Reference Image
+                            </div>
+                          )}
+                        </div>
+                        
+                        {/* Thumbnail Grid */}
+                        <div className="flex justify-between w-full">
+                          {versions.map((version) => (
+                            <div key={version.id} className="flex flex-col items-center gap-2">
+                              <button
+                                onClick={() => setSelectedVersion(version.id)}
+                                className={`w-[72px] h-[72px] relative overflow-hidden rounded-md border-2 transition-colors ${
+                                  selectedVersion === version.id 
+                                    ? 'border-primary bg-primary/10' 
+                                    : 'border-muted bg-muted hover:border-muted-foreground/50'
+                                }`}
+                              >
+                                {version.image ? (
+                                  <img
+                                    src={version.image}
+                                    alt={version.name}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                                    {version.id}
+                                  </div>
+                                )}
+                              </button>
+                              <p className="text-xs text-center text-card-foreground">{version.name}</p>
+                            </div>
+                          ))}
+                        </div>
+                      </CardContent>
+                      
+                      <CardFooter className="flex-col items-center gap-4 p-6 pt-0">
+                        <div className="w-full flex flex-col gap-2">
+                          <Button className="w-full">Download</Button>
+                          <Button variant="outline" className="w-full">Edit this image</Button>
+                        </div>
+                        <Button variant="link" className="text-sm font-normal text-foreground h-auto p-0">
+                          Delete
+                        </Button>
+                      </CardFooter>
+                    </Card>
+                  </div>
+                </aside>
+              </>
+            )}
+          </main>
+        </div>
+      </div>
+    </div>
+  );
+}
