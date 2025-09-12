@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
-import { CornerUpLeft, Download, History, Layers2, PaintRoller, Eraser } from 'lucide-react';
+import { CornerUpLeft, Download, History, PaintRoller, Eraser } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../components/ui/drawer';
-import { Toggle } from '../components/ui/toggle';
-import { Slider } from '../components/ui/slider';
 import { ScrollArea } from '../components/ui/scroll-area';
+import {
+  ReactCompareSlider,
+  ReactCompareSliderImage,
+} from 'react-compare-slider';
 
 interface EditScreenMobileProps {
   onBack: () => void;
@@ -15,8 +17,6 @@ interface EditScreenMobileProps {
 
 export default function EditScreenMobile({ onBack, prompt = "", beforeImage = "", afterImage = "" }: EditScreenMobileProps) {
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
-  const [isOverlayMode, setIsOverlayMode] = useState(false);
-  const [overlayOpacity, setOverlayOpacity] = useState([50]);
 
   // Mock version data - in real app this would come from props/state
   const versions = [
@@ -72,18 +72,6 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
             <Button variant="ghost" size="sm" className="p-2">
               <Eraser className="h-4 w-4" />
             </Button>
-            
-            {/* Layer Toggle - Active when overlay mode is on */}
-            {beforeImage && afterImage && (
-              <Toggle
-                pressed={isOverlayMode}
-                onPressedChange={setIsOverlayMode}
-                size="sm"
-                className="p-2"
-              >
-                <Layers2 className="h-4 w-4" />
-              </Toggle>
-            )}
             
             {/* Version History */}
             <Drawer>
@@ -180,62 +168,24 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         <div className="flex-1 p-4">
           {beforeImage && afterImage ? (
             <ScrollArea className="h-full w-full rounded-lg border">
-              {isOverlayMode ? (
-                /* Overlay Mode - Single image with opacity overlay */
-                <div className="relative min-h-full">
-                  {/* Show After image as base when opacity is 0, otherwise show Before */}
-                  {overlayOpacity[0] === 0 ? (
-                    <img 
-                      src={afterImage} 
-                      alt="After" 
-                      className="w-full h-auto min-h-full object-contain"
+              <div className="min-h-full">
+                <ReactCompareSlider
+                  itemOne={
+                    <ReactCompareSliderImage
+                      src={beforeImage}
+                      alt="Before"
+                      style={{ objectFit: 'contain' }}
                     />
-                  ) : (
-                    <>
-                      {/* Base Image (Before) */}
-                      <img 
-                        src={beforeImage} 
-                        alt="Before" 
-                        className="w-full h-auto min-h-full object-contain"
-                      />
-                      
-                      {/* Overlay Image (After) with opacity */}
-                      <div 
-                        className="absolute inset-0"
-                        style={{ opacity: overlayOpacity[0] / 100 }}
-                      >
-                        <img 
-                          src={afterImage} 
-                          alt="After" 
-                          className="w-full h-auto min-h-full object-contain"
-                        />
-                      </div>
-                    </>
-                  )}
-                  
-                  {/* Fixed Labels with percentages - only in overlay mode */}
-                  <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                    Before ({100 - overlayOpacity[0]}%)
-                  </div>
-                  <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                    After ({overlayOpacity[0]}%)
-                  </div>
-                </div>
-              ) : (
-                /* Default Mode - Show only After image for editing */
-                <div className="relative min-h-full">
-                  <img 
-                    src={afterImage} 
-                    alt="Edited Image" 
-                    className="w-full h-auto min-h-full object-contain"
-                  />
-                  
-                  {/* Simple label for the current edit */}
-                  <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                    Current Edit
-                  </div>
-                </div>
-              )}
+                  }
+                  itemTwo={
+                    <ReactCompareSliderImage
+                      src={afterImage}
+                      alt="After"
+                      style={{ objectFit: 'contain' }}
+                    />
+                  }
+                />
+              </div>
             </ScrollArea>
           ) : (
             /* Single Image Display */
@@ -253,24 +203,6 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
           )}
         </div>
       </div>
-
-      {/* Opacity Slider - Moved to bottom for better mobile ergonomics */}
-      {isOverlayMode && beforeImage && afterImage && (
-        <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0">
-          <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground font-medium">Before</span>
-            <Slider
-              value={overlayOpacity}
-              onValueChange={setOverlayOpacity}
-              max={100}
-              min={0}
-              step={1}
-              className="flex-1"
-            />
-            <span className="text-xs text-muted-foreground min-w-[3ch] font-medium">After</span>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
