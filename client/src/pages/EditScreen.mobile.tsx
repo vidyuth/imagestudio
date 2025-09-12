@@ -160,8 +160,47 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         </div>
       </div>
 
-      {/* Prompt Composer Section - Moved to top */}
-      <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
+      {/* Main Content Area - Simplified Structure */}
+      <div className="flex-1 flex flex-col p-4">
+        {/* Image Display Area */}
+        <div className="w-full mb-4">
+          {beforeImage && afterImage ? (
+            <div className="rounded-lg border overflow-hidden">
+              <ReactCompareSlider
+                itemOne={
+                  <ReactCompareSliderImage
+                    src={beforeImage}
+                    alt="Before"
+                    style={{ objectFit: 'contain' }}
+                  />
+                }
+                itemTwo={
+                  <ReactCompareSliderImage
+                    src={afterImage}
+                    alt="After"
+                    style={{ objectFit: 'contain' }}
+                  />
+                }
+                handle={<ReactCompareSliderHandle style={{color: 'white'}}/>}
+              />
+            </div>
+          ) : (
+            /* Single Image Display */
+            <div className="w-full aspect-square rounded-lg border bg-muted flex items-center justify-center">
+              {beforeImage || afterImage ? (
+                <img 
+                  src={afterImage || beforeImage} 
+                  alt="Image" 
+                  className="max-w-full max-h-full object-contain rounded-lg" 
+                />
+              ) : (
+                <div className="text-muted-foreground">No image loaded</div>
+              )}
+            </div>
+          )}
+        </div>
+
+        {/* Prompt Composer Section - Below Image */}
         <div className="flex flex-col gap-3">
           <Input
             placeholder="Use the paintbrush to select an area on the photo"
@@ -173,49 +212,6 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
             <Wand2 className="h-4 w-4 mr-2" />
             Update
           </Button>
-        </div>
-      </div>
-
-      {/* Main Content Area - Always show image and editing tools */}
-      <div className="flex-1 flex flex-col overflow-hidden">
-        {/* Image Display Area */}
-        <div className="flex-1 overflow-hidden p-4">
-          {beforeImage && afterImage ? (
-            <ScrollArea className="h-full w-full rounded-lg border">
-              <div className="min-h-full">
-                <ReactCompareSlider
-                  itemOne={
-                    <ReactCompareSliderImage
-                      src={beforeImage}
-                      alt="Before"
-                      style={{ objectFit: 'contain' }}
-                    />
-                  }
-                  itemTwo={
-                    <ReactCompareSliderImage
-                      src={afterImage}
-                      alt="After"
-                      style={{ objectFit: 'contain' }}
-                    />
-                  }
-                  handle={<ReactCompareSliderHandle style={{color: 'white'}}/>}
-                />
-              </div>
-            </ScrollArea>
-          ) : (
-            /* Single Image Display */
-            <div className="h-full w-full rounded-lg border bg-muted flex items-center justify-center">
-              {beforeImage || afterImage ? (
-                <img 
-                  src={afterImage || beforeImage} 
-                  alt="Image" 
-                  className="max-w-full max-h-full object-contain" 
-                />
-              ) : (
-                <div className="text-muted-foreground">No image loaded</div>
-              )}
-            </div>
-          )}
         </div>
       </div>
     </div>
