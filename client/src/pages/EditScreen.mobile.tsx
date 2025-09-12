@@ -1,15 +1,10 @@
 import React, { useState } from 'react';
-import { CornerUpLeft, Download, RotateCcw, RotateCw, Crop, Palette, Sun, Contrast, Maximize2, Minimize2, PaintBucket, Filter, Focus, Eraser, Settings, Layers, History, Menu, Sliders, Zap, Sparkles, Layers2 } from 'lucide-react';
+import { CornerUpLeft, Download, History, Layers2, PaintRoller, Eraser } from 'lucide-react';
 import { Button } from '../components/ui/button';
-import { Card } from '../components/ui/card';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../components/ui/sheet';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../components/ui/drawer';
 import { Toggle } from '../components/ui/toggle';
 import { Slider } from '../components/ui/slider';
-import { Separator } from '../components/ui/separator';
 import { ScrollArea } from '../components/ui/scroll-area';
-import BeforeAfterSlider from '../components/BeforeAfterSlider';
-import { LABELS } from '../config/labels';
 
 interface EditScreenMobileProps {
   onBack: () => void;
@@ -18,31 +13,7 @@ interface EditScreenMobileProps {
   afterImage?: string;
 }
 
-interface EditTool {
-  id: string;
-  name: string;
-  icon: React.ComponentType<{ className?: string }>;
-  description: string;
-  type: 'adjust' | 'filter' | 'transform';
-}
-
-const leftTools: EditTool[] = [
-  { id: 'brightness', name: 'Brightness', icon: Sun, description: 'Adjust image brightness', type: 'adjust' },
-  { id: 'contrast', name: 'Contrast', icon: Contrast, description: 'Adjust image contrast', type: 'adjust' },
-  { id: 'rotate-left', name: 'Rotate Left', icon: RotateCcw, description: 'Rotate image left', type: 'transform' },
-  { id: 'crop', name: 'Crop', icon: Crop, description: 'Crop image', type: 'transform' },
-];
-
-const rightTools: EditTool[] = [
-  { id: 'filters', name: 'Filters', icon: Filter, description: 'Apply filters', type: 'filter' },
-  { id: 'effects', name: 'Effects', icon: Sparkles, description: 'Special effects', type: 'filter' },
-  { id: 'enhance', name: 'Enhance', icon: Zap, description: 'Auto enhance', type: 'adjust' },
-  { id: 'adjust', name: 'Adjust', icon: Sliders, description: 'Fine adjustments', type: 'adjust' },
-];
-
 export default function EditScreenMobile({ onBack, prompt = "", beforeImage = "", afterImage = "" }: EditScreenMobileProps) {
-  const [viewMode, setViewMode] = useState<'beforeAfter' | 'edit'>('beforeAfter');
-  const [selectedTool, setSelectedTool] = useState<string | null>(null);
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
   const [isOverlayMode, setIsOverlayMode] = useState(false);
   const [overlayOpacity, setOverlayOpacity] = useState([50]);
@@ -75,136 +46,232 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       <div className="fixed top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs z-50">
         MOBILE
       </div>
-      {/* Tab Bar - Right after header */}
+
+      {/* Toolbar - Combined with back button */}
       <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
-          {/* Left - Back Button */}
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={onBack}
-            className="p-2"
-          >
-            <CornerUpLeft className="h-4 w-4" />
-          </Button>
-
-          {/* Center - Mode Toggle */}
-          <div className="bg-muted rounded-lg p-1 flex">
-            <Toggle
-              pressed={viewMode === 'beforeAfter'}
-              onPressedChange={() => setViewMode('beforeAfter')}
-              className="px-4 py-2 text-sm font-medium data-[state=on]:bg-background data-[state=on]:text-foreground data-[state=on]:shadow-sm"
-            >
-              Before & After
-            </Toggle>
-            <Toggle
-              pressed={viewMode === 'edit'}
-              onPressedChange={() => setViewMode('edit')}
-              className="px-4 py-2 text-sm font-medium data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-sm"
-            >
-              Edit
-            </Toggle>
-          </div>
-
-          {/* Overlay Toggle - Only show in before/after mode */}
-          {viewMode === 'beforeAfter' && beforeImage && afterImage && (
-            <Toggle
-              pressed={isOverlayMode}
-              onPressedChange={setIsOverlayMode}
-              size="sm"
+          {/* Left - Back button + First Group - Editing Tools */}
+          <div className="flex items-center gap-2">
+            {/* Back Button */}
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={onBack}
               className="p-2"
             >
-              <Layers2 className="h-4 w-4" />
-            </Toggle>
-          )}
-
-          {/* Right - Version History */}
-          <Drawer>
-            <DrawerTrigger asChild>
-              <Button variant="ghost" size="sm" className="p-2">
-                <History className="h-4 w-4" />
-              </Button>
-            </DrawerTrigger>
-            <DrawerContent>
-              <DrawerHeader>
-                <DrawerTitle>Reference Image</DrawerTitle>
-              </DrawerHeader>
-              <div className="p-4 space-y-4">
-                {/* Selected Version Info */}
-                <div className="space-y-2">
-                  <h3 className="font-medium">{versions[selectedVersion - 1]?.name}</h3>
-                  <div className="text-sm text-muted-foreground">
-                    <p><span className="font-medium">Your prompt:</span></p>
-                    <p>{versions[selectedVersion - 1]?.prompt}</p>
-                  </div>
-                </div>
-                
-                {/* Large Preview Image */}
-                <div className="bg-muted rounded-lg p-4">
-                  <div className="aspect-video bg-muted-foreground/10 rounded border-2 border-dashed border-muted-foreground/25 flex items-center justify-center">
-                    {versions[selectedVersion - 1]?.image ? (
-                      <img 
-                        src={versions[selectedVersion - 1].image} 
-                        alt={versions[selectedVersion - 1].name}
-                        className="w-full h-full object-cover rounded"
-                      />
-                    ) : (
-                      <span className="text-xs text-muted-foreground">Reference Image</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Thumbnail Grid - Only 3 versions */}
-                <div className="grid grid-cols-3 gap-3">
-                  {versions.map((version) => (
-                    <div key={version.id} className="space-y-1">
-                      <button
-                        onClick={() => setSelectedVersion(version.id)}
-                        className={`w-full aspect-square bg-muted rounded border-2 flex items-center justify-center transition-colors ${
-                          selectedVersion === version.id 
-                            ? 'border-primary bg-primary/10' 
-                            : 'border-dashed border-muted-foreground/25 hover:border-muted-foreground/50'
-                        }`}
-                      >
-                        {version.image ? (
-                          <img 
-                            src={version.image} 
-                            alt={version.name}
-                            className="w-full h-full object-cover rounded"
-                          />
-                        ) : (
-                          <span className="text-xs text-muted-foreground">{version.id}</span>
-                        )}
-                      </button>
-                      <p className="text-xs text-center text-muted-foreground">{version.name}</p>
+              <CornerUpLeft className="h-4 w-4" />
+            </Button>
+            
+            {/* Separator line */}
+            <div className="h-6 w-px bg-border mx-1" />
+            
+            <Button variant="ghost" size="sm" className="p-2">
+              <PaintRoller className="h-4 w-4" />
+            </Button>
+            
+            <Button variant="ghost" size="sm" className="p-2">
+              <Eraser className="h-4 w-4" />
+            </Button>
+            
+            {/* Layer Toggle - Active when overlay mode is on */}
+            {beforeImage && afterImage && (
+              <Toggle
+                pressed={isOverlayMode}
+                onPressedChange={setIsOverlayMode}
+                size="sm"
+                className="p-2"
+              >
+                <Layers2 className="h-4 w-4" />
+              </Toggle>
+            )}
+            
+            {/* Version History */}
+            <Drawer>
+              <DrawerTrigger asChild>
+                <Button variant="ghost" size="sm" className="p-2">
+                  <History className="h-4 w-4" />
+                </Button>
+              </DrawerTrigger>
+              <DrawerContent>
+                <DrawerHeader>
+                  <DrawerTitle>Reference Image</DrawerTitle>
+                </DrawerHeader>
+                <div className="p-4 space-y-4">
+                  {/* Selected Version Info */}
+                  <div className="space-y-2">
+                    <h3 className="font-medium">{versions[selectedVersion - 1]?.name}</h3>
+                    <div className="text-sm text-muted-foreground">
+                      <p><span className="font-medium">Your prompt:</span></p>
+                      <p>{versions[selectedVersion - 1]?.prompt}</p>
                     </div>
-                  ))}
-                </div>
+                  </div>
+                  
+                  {/* Large Preview Image */}
+                  <div className="bg-muted rounded-lg p-4">
+                    <div className="aspect-video bg-muted-foreground/10 rounded border-2 border-dashed border-muted-foreground/25 flex items-center justify-center">
+                      {versions[selectedVersion - 1]?.image ? (
+                        <img 
+                          src={versions[selectedVersion - 1].image} 
+                          alt={versions[selectedVersion - 1].name}
+                          className="w-full h-full object-cover rounded"
+                        />
+                      ) : (
+                        <span className="text-xs text-muted-foreground">Reference Image</span>
+                      )}
+                    </div>
+                  </div>
 
-                {/* Action Buttons */}
-                <div className="pt-4 space-y-2">
-                  <Button className="w-full bg-primary text-primary-foreground">
-                    <Download className="h-4 w-4 mr-2" />
-                    Download This Version
-                  </Button>
-                  <Button className="w-full" variant="outline">
-                    Edit this image
-                  </Button>
-                  <Button className="w-full text-destructive" variant="outline">
-                    Delete
-                  </Button>
+                  {/* Thumbnail Grid - Only 3 versions */}
+                  <div className="grid grid-cols-3 gap-3">
+                    {versions.map((version) => (
+                      <div key={version.id} className="space-y-1">
+                        <button
+                          onClick={() => setSelectedVersion(version.id)}
+                          className={`w-full aspect-square bg-muted rounded border-2 flex items-center justify-center transition-colors ${
+                            selectedVersion === version.id 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-dashed border-muted-foreground/25 hover:border-muted-foreground/50'
+                          }`}
+                        >
+                          {version.image ? (
+                            <img 
+                              src={version.image} 
+                              alt={version.name}
+                              className="w-full h-full object-cover rounded"
+                            />
+                          ) : (
+                            <span className="text-xs text-muted-foreground">{version.id}</span>
+                          )}
+                        </button>
+                        <p className="text-xs text-center text-muted-foreground">{version.name}</p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="pt-4 space-y-2">
+                    <Button className="w-full bg-primary text-primary-foreground">
+                      <Download className="h-4 w-4 mr-2" />
+                      Download This Version
+                    </Button>
+                    <Button className="w-full" variant="outline">
+                      Edit this image
+                    </Button>
+                    <Button className="w-full text-destructive" variant="outline">
+                      Delete
+                    </Button>
+                  </div>
                 </div>
-              </div>
-            </DrawerContent>
-          </Drawer>
+              </DrawerContent>
+            </Drawer>
+          </div>
+
+          {/* Right - Download Button */}
+          <Button className="bg-primary text-primary-foreground px-4 py-2">
+            <Download className="h-4 w-4 mr-2" />
+            Download
+          </Button>
         </div>
       </div>
 
-      {/* Opacity Slider - Only show when overlay mode is active */}
-      {isOverlayMode && viewMode === 'beforeAfter' && beforeImage && afterImage && (
-        <div className="bg-card border-b border-border px-4 py-2 flex-shrink-0">
+      {/* Main Content Area - Always show image and editing tools */}
+      <div className="flex-1 flex flex-col">
+        {/* Image Display Area */}
+        <div className="flex-1 p-4">
+          {beforeImage && afterImage ? (
+            <ScrollArea className="h-full w-full rounded-lg border">
+              {isOverlayMode ? (
+                /* Overlay Mode - Single image with opacity overlay */
+                <div className="relative min-h-full">
+                  {/* Show After image as base when opacity is 0, otherwise show Before */}
+                  {overlayOpacity[0] === 0 ? (
+                    <img 
+                      src={afterImage} 
+                      alt="After" 
+                      className="w-full h-auto min-h-full object-contain"
+                    />
+                  ) : (
+                    <>
+                      {/* Base Image (Before) */}
+                      <img 
+                        src={beforeImage} 
+                        alt="Before" 
+                        className="w-full h-auto min-h-full object-contain"
+                      />
+                      
+                      {/* Overlay Image (After) with opacity */}
+                      <div 
+                        className="absolute inset-0"
+                        style={{ opacity: overlayOpacity[0] / 100 }}
+                      >
+                        <img 
+                          src={afterImage} 
+                          alt="After" 
+                          className="w-full h-auto min-h-full object-contain"
+                        />
+                      </div>
+                    </>
+                  )}
+                  
+                  {/* Fixed Labels with percentages - only in overlay mode */}
+                  <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                    Before ({100 - overlayOpacity[0]}%)
+                  </div>
+                  <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                    After ({overlayOpacity[0]}%)
+                  </div>
+                </div>
+              ) : (
+                /* Side-by-Side Mode - when overlay is OFF */
+                <div className="grid grid-cols-2 gap-0 min-h-full">
+                  {/* Before Image Section */}
+                  <div className="relative border-r border-border">
+                    <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                      Before
+                    </div>
+                    <img 
+                      src={beforeImage} 
+                      alt="Before" 
+                      className="w-full h-auto min-h-full object-cover"
+                    />
+                  </div>
+                  
+                  {/* After Image Section */}
+                  <div className="relative">
+                    <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                      After
+                    </div>
+                    <img 
+                      src={afterImage} 
+                      alt="After" 
+                      className="w-full h-auto min-h-full object-cover"
+                    />
+                  </div>
+                </div>
+              )}
+            </ScrollArea>
+          ) : (
+            /* Single Image Display */
+            <div className="h-full w-full rounded-lg border bg-muted flex items-center justify-center">
+              {beforeImage || afterImage ? (
+                <img 
+                  src={afterImage || beforeImage} 
+                  alt="Image" 
+                  className="max-w-full max-h-full object-contain" 
+                />
+              ) : (
+                <div className="text-muted-foreground">No image loaded</div>
+              )}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Opacity Slider - Moved to bottom for better mobile ergonomics */}
+      {isOverlayMode && beforeImage && afterImage && (
+        <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0">
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground font-medium">Opacity:</span>
+            <span className="text-xs text-muted-foreground font-medium">Before</span>
             <Slider
               value={overlayOpacity}
               onValueChange={setOverlayOpacity}
@@ -213,215 +280,10 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
               step={1}
               className="flex-1"
             />
-            <span className="text-xs text-muted-foreground min-w-[3ch] font-medium">{overlayOpacity[0]}%</span>
+            <span className="text-xs text-muted-foreground min-w-[3ch] font-medium">After</span>
           </div>
         </div>
       )}
-
-      {/* Main Content Area */}
-      <div className="flex-1 bg-muted/20 relative min-h-0">
-        {/* Floating Left Tool Panel - Only visible in Edit mode */}
-        {viewMode === 'edit' && (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="absolute top-4 left-4 z-10 bg-card/90 backdrop-blur-sm border shadow-lg"
-              >
-                <Settings className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="left" className="w-80 sm:w-96">
-              <SheetHeader>
-                <SheetTitle>Edit Tools</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-4">
-                {leftTools.map((tool) => (
-                  <div key={tool.id} className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <Button
-                        variant={selectedTool === tool.id ? "default" : "ghost"}
-                        size="sm"
-                        onClick={() => setSelectedTool(selectedTool === tool.id ? null : tool.id)}
-                        className="flex items-center gap-2"
-                      >
-                        <tool.icon className="h-4 w-4" />
-                        {tool.name}
-                      </Button>
-                    </div>
-                    
-                    {selectedTool === tool.id && tool.type === 'adjust' && (
-                      <div className="pl-4 space-y-2">
-                        <div className="space-y-1">
-                          <label className="text-sm text-muted-foreground">Intensity</label>
-                          <Slider defaultValue={[50]} max={100} step={1} className="w-full" />
-                        </div>
-                      </div>
-                    )}
-                    
-                    <Separator />
-                  </div>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        )}
-
-        {/* Floating Right Tool Panel - Only visible in Edit mode */}
-        {viewMode === 'edit' && (
-          <Sheet>
-            <SheetTrigger asChild>
-              <Button 
-                variant="secondary" 
-                size="sm"
-                className="absolute top-4 right-4 z-10 bg-card/90 backdrop-blur-sm border shadow-lg"
-              >
-                <Palette className="h-4 w-4" />
-              </Button>
-            </SheetTrigger>
-            <SheetContent side="right" className="w-80 sm:w-96">
-              <SheetHeader>
-                <SheetTitle>Filters & Effects</SheetTitle>
-              </SheetHeader>
-              <div className="mt-6 space-y-4">
-                {rightTools.map((tool) => (
-                  <div key={tool.id} className="space-y-3">
-                    <Button
-                      variant={selectedTool === tool.id ? "default" : "ghost"}
-                      size="sm"
-                      onClick={() => setSelectedTool(selectedTool === tool.id ? null : tool.id)}
-                      className="w-full flex items-center gap-2 justify-start"
-                    >
-                      <tool.icon className="h-4 w-4" />
-                      {tool.name}
-                    </Button>
-                    
-                    {selectedTool === tool.id && (
-                      <div className="pl-4">
-                        <p className="text-sm text-muted-foreground mb-2">{tool.description}</p>
-                        {tool.type === 'adjust' && (
-                          <div className="space-y-1">
-                            <label className="text-sm text-muted-foreground">Intensity</label>
-                            <Slider defaultValue={[50]} max={100} step={1} className="w-full" />
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    
-                    <Separator />
-                  </div>
-                ))}
-              </div>
-            </SheetContent>
-          </Sheet>
-        )}
-
-        {/* Central Image Area */}
-        <div className="h-full p-4 flex flex-col">
-          {viewMode === 'beforeAfter' && beforeImage && afterImage ? (
-            <div className="flex-1 min-h-0">
-              <ScrollArea className="h-full w-full rounded-lg border">
-                {isOverlayMode ? (
-                  /* Overlay Mode - Single image with opacity overlay */
-                  <div className="relative min-h-full">
-                    {/* Show After image as base when opacity is 0, otherwise show Before */}
-                    {overlayOpacity[0] === 0 ? (
-                      <img 
-                        src={afterImage} 
-                        alt="After" 
-                        className="w-full h-auto min-h-full object-contain"
-                      />
-                    ) : (
-                      <>
-                        {/* Base Image (Before) */}
-                        <img 
-                          src={beforeImage} 
-                          alt="Before" 
-                          className="w-full h-auto min-h-full object-contain"
-                        />
-                        
-                        {/* Overlay Image (After) with opacity */}
-                        <div 
-                          className="absolute inset-0"
-                          style={{ opacity: overlayOpacity[0] / 100 }}
-                        >
-                          <img 
-                            src={afterImage} 
-                            alt="After" 
-                            className="w-full h-auto min-h-full object-contain"
-                          />
-                        </div>
-                      </>
-                    )}
-                    
-                    {/* Fixed Labels with percentages - only in overlay mode */}
-                    <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                      Before ({100 - overlayOpacity[0]}%)
-                    </div>
-                    <div className="absolute top-2 right-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                      After ({overlayOpacity[0]}%)
-                    </div>
-                  </div>
-                ) : (
-                  /* Side-by-Side Mode - when overlay is OFF */
-                  <div className="grid grid-cols-2 gap-0 min-h-full">
-                    {/* Before Image Section */}
-                    <div className="relative border-r border-border">
-                      <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                        Before
-                      </div>
-                      <img 
-                        src={beforeImage} 
-                        alt="Before" 
-                        className="w-full h-auto min-h-full object-cover"
-                      />
-                    </div>
-                    
-                    {/* After Image Section */}
-                    <div className="relative">
-                      <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                        After
-                      </div>
-                      <img 
-                        src={afterImage} 
-                        alt="After" 
-                        className="w-full h-auto min-h-full object-cover"
-                      />
-                    </div>
-                  </div>
-                )}
-              </ScrollArea>
-            </div>
-          ) : (
-            <div className="flex-1 flex items-center justify-center">
-              <Card className="aspect-square bg-muted border-2 border-dashed border-muted-foreground/25 flex items-center justify-center max-w-md w-full">
-                <div className="text-center text-muted-foreground p-6">
-                  <p className="text-sm font-medium mb-2">
-                    {viewMode === 'edit' ? 'Image Editor' : 'Before & After'}
-                  </p>
-                  <p className="text-xs">
-                    {viewMode === 'edit' 
-                      ? 'Tap tools to edit' 
-                      : beforeImage && afterImage 
-                        ? 'Loading...' 
-                        : 'Upload images to compare'
-                    }
-                  </p>
-                </div>
-              </Card>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Bottom Download Button */}
-      <div className="bg-card border-t border-border p-4 pb-8 flex-shrink-0">
-        <Button className="w-full bg-primary text-primary-foreground">
-          <Download className="h-4 w-4 mr-2" />
-          {viewMode === 'beforeAfter' ? 'Download AI Result' : 'Download Edited Version'}
-        </Button>
-      </div>
     </div>
   );
 }
