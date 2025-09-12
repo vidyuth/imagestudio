@@ -13,6 +13,7 @@ import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
+import Header from '../components/Header';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -70,33 +71,24 @@ export default function TestDesktopEditScreen({
         DESKTOP TEST
       </div>
 
-      {/* Sticky Header */}
-      <header className="sticky top-0 z-50 border-b border-border bg-background">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14">
-            <div className="flex items-center">
-              <span className="text-lg font-bold text-primary">ImageStudio</span>
-            </div>
-            <div className="flex items-center gap-4">
-              <Button variant="ghost" size="sm">Theme</Button>
-              <Button variant="ghost" size="sm">Help</Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      {/* Use existing Header component */}
+      <Header />
 
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto p-6">
-        <div className="border rounded-md p-4 flex flex-col gap-4">
-          
-          {/* Toolbar */}
-          <header className="flex justify-between items-start gap-2">
-            <Button variant="outline" onClick={handleBack}>
-              <CornerUpLeft className="mr-2 h-4 w-4" />
-              Create a New Stage
-            </Button>
-            <div className="flex items-center gap-2">
-              <div className="flex items-center gap-4">
+      {/* Main Layout Container */}
+      <div className="flex min-h-[calc(100vh-64px)]">
+        {/* Main Content */}
+        <div className="flex-1 max-w-7xl mx-auto p-6">
+          <div className="flex flex-col gap-4">
+            
+            {/* Toolbar */}
+            <header className="relative flex justify-between items-center gap-2">
+              <Button variant="outline" onClick={handleBack}>
+                <CornerUpLeft className="mr-2 h-4 w-4" />
+                Create a New Stage
+              </Button>
+              
+              {/* Centered Icons */}
+              <div className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
                 <Button variant="ghost" size="icon" aria-label="Paint Roller">
                   <PaintRoller className="h-4 w-4" />
                 </Button>
@@ -112,169 +104,177 @@ export default function TestDesktopEditScreen({
                   <History className="h-4 w-4" />
                 </Button>
               </div>
+
+              {/* Right side */}
               <Button size="sm">
                 <Download className="mr-2 h-4 w-4" />
                 Download
               </Button>
-            </div>
-          </header>
+            </header>
 
-          <Separator />
+            <Separator />
 
-          {/* Main Content Area */}
-          <main className="flex gap-4">
-            {/* Image Area */}
-            <div className="flex-1 flex flex-col gap-4">
-              {/* Image Display */}
-              <div className="rounded-md overflow-hidden bg-muted border">
-                {beforeImage && afterImage ? (
-                  <ReactCompareSlider
-                    itemOne={
-                      <ReactCompareSliderImage
-                        src={beforeImage}
-                        alt="Before"
-                        style={{ objectFit: 'contain', height: '400px' }}
-                      />
-                    }
-                    itemTwo={
-                      <ReactCompareSliderImage
-                        src={afterImage}
-                        alt="After"
-                        style={{ objectFit: 'contain', height: '400px' }}
-                      />
-                    }
-                    handle={<ReactCompareSliderHandle style={{color: 'white'}}/>}
-                  />
-                ) : (
-                  <div className="w-full h-96 flex items-center justify-center">
-                    <img 
-                      src={afterImage || beforeImage} 
-                      alt="Image" 
-                      className="max-w-full max-h-full object-contain" 
+            {/* Main Content Area */}
+            <main className="flex flex-col gap-4">
+              {/* Image Area */}
+              <div className="flex flex-col gap-4">
+                {/* Image Display */}
+                <div className="rounded-md overflow-hidden bg-muted border w-full">
+                  {beforeImage && afterImage ? (
+                    <ReactCompareSlider
+                      itemOne={
+                        <ReactCompareSliderImage
+                          src={beforeImage}
+                          alt="Before"
+                          style={{ objectFit: 'cover', height: '500px', width: '100%' }}
+                        />
+                      }
+                      itemTwo={
+                        <ReactCompareSliderImage
+                          src={afterImage}
+                          alt="After"
+                          style={{ objectFit: 'cover', height: '500px', width: '100%' }}
+                        />
+                      }
+                      handle={
+                        <ReactCompareSliderHandle 
+                          style={{
+                            color: 'white',
+                            backgroundColor: 'white',
+                            borderRadius: '50%',
+                            width: '40px',
+                            height: '40px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                          }}
+                        />
+                      }
                     />
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="w-full h-96 flex items-center justify-center">
+                      <img 
+                        src={afterImage || beforeImage} 
+                        alt="Image" 
+                        className="w-full h-full object-cover" 
+                      />
+                    </div>
+                  )}
+                </div>
 
-              {/* Prompt Composer */}
-              <div className="flex flex-col gap-3">
-                <Textarea
-                  placeholder="Use the paintbrush to select an area on the photo"
-                  value={editPrompt}
-                  onChange={(e) => setEditPrompt(e.target.value)}
-                  className="w-full bg-muted border-0 rounded-lg resize-none"
-                  rows={3}
-                />
-                <div className="flex gap-2">
-                  <Button variant="secondary" className="flex-1">
-                    <Wand2 className="h-4 w-4 mr-2" />
-                    Update
-                  </Button>
+                {/* Prompt Composer */}
+                <div className="flex flex-col gap-3">
+                  <Textarea
+                    placeholder="Use the paintbrush to select an area on the photo"
+                    value={editPrompt}
+                    onChange={(e) => setEditPrompt(e.target.value)}
+                    className="w-full bg-muted border-0 rounded-lg resize-none"
+                    rows={3}
+                  />
+                  <div className="flex gap-2">
+                    <Button variant="secondary" className="w-auto">
+                      <Wand2 className="h-4 w-4 mr-2" />
+                      Update
+                    </Button>
+                  </div>
                 </div>
               </div>
+            </main>
+          </div>
+        </div>
+
+        {/* History Panel - Outside main content, positioned to the right */}
+        {showHistory && (
+          <aside className="w-[320px] bg-sidebar border-l border-border flex flex-col min-h-[calc(100vh-64px)]">
+            {/* History Panel Header */}
+            <div className="p-4 border-b border-border">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <div>
+                    <h3 className="text-sm font-semibold text-sidebar-foreground">History</h3>
+                  </div>
+                </div>
+                <Button 
+                  variant="ghost" 
+                  size="icon" 
+                  className="text-sidebar-foreground" 
+                  aria-label="Close History"
+                  onClick={() => setShowHistory(false)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
             </div>
 
-            {/* History Panel - Conditional */}
-            {showHistory && (
-              <>
-                <Separator orientation="vertical" />
-                <aside className="w-[291px] bg-sidebar rounded-md flex flex-col pb-2">
-                  {/* History Panel Header */}
-                  <div className="p-2">
-                    <div className="flex items-center justify-between p-2">
-                      <div className="flex items-center gap-2">
-                        <div className="bg-sidebar-primary text-sidebar-primary-foreground rounded-lg p-2 flex items-center justify-center h-8 w-8">
-                          <GalleryVerticalEnd className="h-4 w-4" />
-                        </div>
-                        <div>
-                          <h3 className="text-sm font-semibold text-sidebar-foreground">History</h3>
-                          <p className="text-xs text-sidebar-foreground tracking-wide">v1.0.1</p>
-                        </div>
+            {/* History Panel Content */}
+            <div className="p-4 flex-1">
+              <Card className="w-full h-full flex flex-col bg-card text-card-foreground border-0">
+                <CardHeader className="p-6 pb-4">
+                  <CardTitle className="text-base font-medium">Reference Image</CardTitle>
+                  <CardDescription className="text-sm pt-1.5 text-muted-foreground">
+                    Your prompt: <br /> {versions[selectedVersion - 1]?.prompt}
+                  </CardDescription>
+                </CardHeader>
+                
+                <CardContent className="p-4 flex-grow flex flex-col items-center gap-1">
+                  {/* Large Preview */}
+                  <div className="w-full aspect-square relative bg-muted rounded-md overflow-hidden">
+                    {versions[selectedVersion - 1]?.image ? (
+                      <img
+                        src={versions[selectedVersion - 1].image}
+                        alt="Reference Image"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-muted-foreground">
+                        Reference Image
                       </div>
-                      <Button 
-                        variant="ghost" 
-                        size="icon" 
-                        className="text-sidebar-foreground" 
-                        aria-label="Close History"
-                        onClick={() => setShowHistory(false)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    </div>
+                    )}
                   </div>
-
-                  {/* History Panel Content */}
-                  <div className="px-2 flex-grow">
-                    <Card className="w-full h-full flex flex-col border bg-card text-card-foreground">
-                      <CardHeader className="p-6 pb-4">
-                        <CardTitle className="text-base font-medium">Reference Image</CardTitle>
-                        <CardDescription className="text-sm pt-1.5 text-muted-foreground">
-                          Your prompt: <br /> {versions[selectedVersion - 1]?.prompt}
-                        </CardDescription>
-                      </CardHeader>
-                      
-                      <CardContent className="p-4 flex-grow flex flex-col items-center gap-2">
-                        {/* Large Preview */}
-                        <div className="w-full aspect-square relative bg-muted rounded-md overflow-hidden">
-                          {versions[selectedVersion - 1]?.image ? (
+                  
+                  {/* Thumbnail Grid */}
+                  <div className="flex justify-between w-full mt-2">
+                    {versions.map((version) => (
+                      <div key={version.id} className="flex flex-col items-center gap-2">
+                        <button
+                          onClick={() => setSelectedVersion(version.id)}
+                          className={`w-[72px] h-[72px] relative overflow-hidden rounded-md border-2 transition-colors ${
+                            selectedVersion === version.id 
+                              ? 'border-primary bg-primary/10' 
+                              : 'border-muted bg-muted hover:border-muted-foreground/50'
+                          }`}
+                        >
+                          {version.image ? (
                             <img
-                              src={versions[selectedVersion - 1].image}
-                              alt="Reference Image"
+                              src={version.image}
+                              alt={version.name}
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-muted-foreground">
-                              Reference Image
+                            <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
+                              {version.id}
                             </div>
                           )}
-                        </div>
-                        
-                        {/* Thumbnail Grid */}
-                        <div className="flex justify-between w-full">
-                          {versions.map((version) => (
-                            <div key={version.id} className="flex flex-col items-center gap-2">
-                              <button
-                                onClick={() => setSelectedVersion(version.id)}
-                                className={`w-[72px] h-[72px] relative overflow-hidden rounded-md border-2 transition-colors ${
-                                  selectedVersion === version.id 
-                                    ? 'border-primary bg-primary/10' 
-                                    : 'border-muted bg-muted hover:border-muted-foreground/50'
-                                }`}
-                              >
-                                {version.image ? (
-                                  <img
-                                    src={version.image}
-                                    alt={version.name}
-                                    className="w-full h-full object-cover"
-                                  />
-                                ) : (
-                                  <div className="w-full h-full flex items-center justify-center text-xs text-muted-foreground">
-                                    {version.id}
-                                  </div>
-                                )}
-                              </button>
-                              <p className="text-xs text-center text-card-foreground">{version.name}</p>
-                            </div>
-                          ))}
-                        </div>
-                      </CardContent>
-                      
-                      <CardFooter className="flex-col items-center gap-4 p-6 pt-0">
-                        <div className="w-full flex flex-col gap-2">
-                          <Button className="w-full">Download</Button>
-                          <Button variant="outline" className="w-full">Edit this image</Button>
-                        </div>
-                        <Button variant="link" className="text-sm font-normal text-foreground h-auto p-0">
-                          Delete
-                        </Button>
-                      </CardFooter>
-                    </Card>
+                        </button>
+                        <p className="text-xs text-center text-card-foreground">{version.name}</p>
+                      </div>
+                    ))}
                   </div>
-                </aside>
-              </>
-            )}
-          </main>
-        </div>
+                </CardContent>
+                
+                <CardFooter className="flex-col items-center gap-4 p-6 pt-2">
+                  <div className="w-full flex flex-col gap-2">
+                    <Button className="w-full">Download</Button>
+                    <Button variant="outline" className="w-full">Edit this image</Button>
+                  </div>
+                  <Button variant="link" className="text-sm font-normal text-foreground h-auto p-0">
+                    Delete
+                  </Button>
+                </CardFooter>
+              </Card>
+            </div>
+          </aside>
+        )}
       </div>
     </div>
   );
