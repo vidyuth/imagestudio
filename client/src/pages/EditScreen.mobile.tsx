@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { CornerUpLeft, Download, History, PaintRoller, Eraser, Wand2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
+import { Textarea } from '../components/ui/textarea';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../components/ui/drawer';
 import { ScrollArea } from '../components/ui/scroll-area';
 import {
@@ -202,11 +203,12 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
 
         {/* Prompt Composer Section - Below Image */}
         <div className="flex flex-col gap-3">
-          <Input
+          <Textarea
             placeholder="Use the paintbrush to select an area on the photo"
             value={editPrompt}
             onChange={(e) => setEditPrompt(e.target.value)}
-            className="w-full bg-muted border-0 rounded-lg"
+            className="w-full bg-muted border-0 rounded-lg resize-none"
+            rows={3}
           />
           <Button variant="secondary" className="w-full">
             <Wand2 className="h-4 w-4 mr-2" />
