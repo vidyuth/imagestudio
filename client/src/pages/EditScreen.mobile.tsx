@@ -160,6 +160,22 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
         </div>
       </div>
 
+      {/* Prompt Composer Section - Moved to top */}
+      <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
+        <div className="flex flex-col gap-3">
+          <Input
+            placeholder="Use the paintbrush to select an area on the photo"
+            value={editPrompt}
+            onChange={(e) => setEditPrompt(e.target.value)}
+            className="w-full bg-muted border-0 rounded-lg"
+          />
+          <Button variant="secondary" className="w-full">
+            <Wand2 className="h-4 w-4 mr-2" />
+            Update
+          </Button>
+        </div>
+      </div>
+
       {/* Main Content Area - Always show image and editing tools */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Image Display Area */}
@@ -200,22 +216,6 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
               )}
             </div>
           )}
-        </div>
-
-        {/* Prompt Composer Section */}
-        <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0">
-          <div className="flex flex-col gap-3">
-            <Input
-              placeholder="Use the paintbrush to select an area on the photo"
-              value={editPrompt}
-              onChange={(e) => setEditPrompt(e.target.value)}
-              className="w-full bg-muted border-0 rounded-lg"
-            />
-            <Button variant="secondary" className="w-full">
-              <Wand2 className="h-4 w-4 mr-2" />
-              Update
-            </Button>
-          </div>
         </div>
       </div>
     </div>
