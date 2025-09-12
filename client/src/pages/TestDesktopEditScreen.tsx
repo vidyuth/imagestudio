@@ -1,10 +1,5 @@
 import React, { useState } from 'react';
 import { 
-  CornerUpLeft, 
-  Download, 
-  History, 
-  PaintRoller, 
-  Eraser, 
   Wand2,
   GalleryVerticalEnd,
   X 
@@ -13,7 +8,7 @@ import { Button } from '../components/ui/button';
 import { Textarea } from '../components/ui/textarea';
 import { Separator } from '../components/ui/separator';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
-import Header from '../components/Header';
+import EditScreenToolbar from '../components/EditScreenToolbar';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -71,46 +66,22 @@ export default function TestDesktopEditScreen({
         DESKTOP TEST
       </div>
 
-      {/* Use existing Header component */}
-      <Header />
-
       {/* Main Layout Container */}
-      <div className="flex min-h-[calc(100vh-64px)]">
+      <div className="flex min-h-screen">
         {/* Main Content */}
         <div className="flex-1 max-w-7xl mx-auto p-6">
           <div className="flex flex-col gap-4">
             
             {/* Toolbar */}
-            <header className="relative flex justify-between items-center gap-2">
-              <Button variant="outline" onClick={handleBack}>
-                <CornerUpLeft className="mr-2 h-4 w-4" />
-                Create a New Stage
-              </Button>
-              
-              {/* Centered Icons */}
-              <div className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
-                <Button variant="ghost" size="icon" aria-label="Paint Roller">
-                  <PaintRoller className="h-4 w-4" />
-                </Button>
-                <Button variant="ghost" size="icon" aria-label="Eraser">
-                  <Eraser className="h-4 w-4" />
-                </Button>
-                <Button 
-                  variant="ghost" 
-                  size="icon" 
-                  aria-label="Version History"
-                  onClick={() => setShowHistory(!showHistory)}
-                >
-                  <History className="h-4 w-4" />
-                </Button>
-              </div>
-
-              {/* Right side */}
-              <Button size="sm">
-                <Download className="mr-2 h-4 w-4" />
-                Download
-              </Button>
-            </header>
+            <EditScreenToolbar
+              variant="desktop"
+              onBack={handleBack}
+              onHistoryToggle={() => setShowHistory(!showHistory)}
+              showHistory={showHistory}
+              onDownload={() => console.log('Download clicked')}
+              onPaintRoller={() => console.log('Paint roller clicked')}
+              onEraser={() => console.log('Eraser clicked')}
+            />
 
             <Separator />
 
@@ -187,7 +158,7 @@ export default function TestDesktopEditScreen({
         {showHistory && (
           <aside className="w-[320px] bg-sidebar border-l border-border flex flex-col min-h-[calc(100vh-64px)]">
             {/* History Panel Header */}
-            <div className="p-4 border-b border-border">
+            <div className="p-3 border-b border-border">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <div>
@@ -207,16 +178,16 @@ export default function TestDesktopEditScreen({
             </div>
 
             {/* History Panel Content */}
-            <div className="p-4 flex-1">
+            <div className="p-2 flex-1 overflow-y-auto">
               <Card className="w-full h-full flex flex-col bg-card text-card-foreground border-0">
-                <CardHeader className="p-6 pb-4">
+                <CardHeader className="p-4 pb-2">
                   <CardTitle className="text-base font-medium">Reference Image</CardTitle>
-                  <CardDescription className="text-sm pt-1.5 text-muted-foreground">
+                  <CardDescription className="text-sm pt-1 text-muted-foreground">
                     Your prompt: <br /> {versions[selectedVersion - 1]?.prompt}
                   </CardDescription>
                 </CardHeader>
                 
-                <CardContent className="p-4 flex-grow flex flex-col items-center gap-1">
+                <CardContent className="p-3 flex-grow flex flex-col items-center gap-2">
                   {/* Large Preview */}
                   <div className="w-full aspect-square relative bg-muted rounded-md overflow-hidden">
                     {versions[selectedVersion - 1]?.image ? (
@@ -235,10 +206,10 @@ export default function TestDesktopEditScreen({
                   {/* Thumbnail Grid */}
                   <div className="flex justify-between w-full mt-2">
                     {versions.map((version) => (
-                      <div key={version.id} className="flex flex-col items-center gap-2">
+                      <div key={version.id} className="flex flex-col items-center gap-1">
                         <button
                           onClick={() => setSelectedVersion(version.id)}
-                          className={`w-[72px] h-[72px] relative overflow-hidden rounded-md border-2 transition-colors ${
+                          className={`w-[64px] h-[64px] relative overflow-hidden rounded-md border-2 transition-colors ${
                             selectedVersion === version.id 
                               ? 'border-primary bg-primary/10' 
                               : 'border-muted bg-muted hover:border-muted-foreground/50'
@@ -262,10 +233,10 @@ export default function TestDesktopEditScreen({
                   </div>
                 </CardContent>
                 
-                <CardFooter className="flex-col items-center gap-4 p-6 pt-2">
+                <CardFooter className="flex-col items-center gap-3 p-3 pt-1">
                   <div className="w-full flex flex-col gap-2">
-                    <Button className="w-full">Download</Button>
-                    <Button variant="outline" className="w-full">Edit this image</Button>
+                    <Button className="w-full" size="sm">Download</Button>
+                    <Button variant="outline" className="w-full" size="sm">Edit this image</Button>
                   </div>
                   <Button variant="link" className="text-sm font-normal text-foreground h-auto p-0">
                     Delete

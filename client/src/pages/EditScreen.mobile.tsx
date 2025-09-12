@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { CornerUpLeft, Download, History, PaintRoller, Eraser, Wand2 } from 'lucide-react';
+import { Wand2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Input } from '../components/ui/input';
 import { Textarea } from '../components/ui/textarea';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../components/ui/drawer';
 import { ScrollArea } from '../components/ui/scroll-area';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
   ReactCompareSliderHandle,
 } from 'react-compare-slider';
+import EditScreenToolbar from '../components/EditScreenToolbar';
 
 interface EditScreenMobileProps {
   onBack: () => void;
@@ -46,120 +46,17 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
 
   return (
     <div className="h-screen bg-background flex flex-col overflow-hidden pt-4 sm:pt-8">
-      {/* Toolbar - Combined with back button */}
-      <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
-        <div className="flex items-center justify-between">
-          {/* Left - Back button + First Group - Editing Tools */}
-          <div className="flex items-center gap-2">
-            {/* Back Button */}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={onBack}
-              className="p-2"
-            >
-              <CornerUpLeft className="h-4 w-4" />
-            </Button>
-            
-            {/* Separator line */}
-            <div className="h-6 w-px bg-border mx-1" />
-            
-            <Button variant="ghost" size="sm" className="p-2">
-              <PaintRoller className="h-4 w-4" />
-            </Button>
-            
-            <Button variant="ghost" size="sm" className="p-2">
-              <Eraser className="h-4 w-4" />
-            </Button>
-            
-            {/* Version History */}
-            <Drawer>
-              <DrawerTrigger asChild>
-                <Button variant="ghost" size="sm" className="p-2">
-                  <History className="h-4 w-4" />
-                </Button>
-              </DrawerTrigger>
-              <DrawerContent>
-                <DrawerHeader>
-                  <DrawerTitle>Reference Image</DrawerTitle>
-                </DrawerHeader>
-                <div className="p-4 space-y-4">
-                  {/* Selected Version Info */}
-                  <div className="space-y-2">
-                    <h3 className="font-medium">{versions[selectedVersion - 1]?.name}</h3>
-                    <div className="text-sm text-muted-foreground">
-                      <p><span className="font-medium">Your prompt:</span></p>
-                      <p>{versions[selectedVersion - 1]?.prompt}</p>
-                    </div>
-                  </div>
-                  
-                  {/* Large Preview Image */}
-                  <div className="bg-muted rounded-lg p-4">
-                    <div className="aspect-video bg-muted-foreground/10 rounded border-2 border-dashed border-muted-foreground/25 flex items-center justify-center">
-                      {versions[selectedVersion - 1]?.image ? (
-                        <img 
-                          src={versions[selectedVersion - 1].image} 
-                          alt={versions[selectedVersion - 1].name}
-                          className="w-full h-full object-cover rounded"
-                        />
-                      ) : (
-                        <span className="text-xs text-muted-foreground">Reference Image</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Thumbnail Grid - Only 3 versions */}
-                  <div className="grid grid-cols-3 gap-3">
-                    {versions.map((version) => (
-                      <div key={version.id} className="space-y-1">
-                        <button
-                          onClick={() => setSelectedVersion(version.id)}
-                          className={`w-full aspect-square bg-muted rounded border-2 flex items-center justify-center transition-colors ${
-                            selectedVersion === version.id 
-                              ? 'border-primary bg-primary/10' 
-                              : 'border-dashed border-muted-foreground/25 hover:border-muted-foreground/50'
-                          }`}
-                        >
-                          {version.image ? (
-                            <img 
-                              src={version.image} 
-                              alt={version.name}
-                              className="w-full h-full object-cover rounded"
-                            />
-                          ) : (
-                            <span className="text-xs text-muted-foreground">{version.id}</span>
-                          )}
-                        </button>
-                        <p className="text-xs text-center text-muted-foreground">{version.name}</p>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Action Buttons */}
-                  <div className="pt-4 space-y-2">
-                    <Button className="w-full bg-primary text-primary-foreground">
-                      <Download className="h-4 w-4 mr-2" />
-                      Download This Version
-                    </Button>
-                    <Button className="w-full" variant="outline">
-                      Edit this image
-                    </Button>
-                    <Button className="w-full text-destructive" variant="outline">
-                      Delete
-                    </Button>
-                  </div>
-                </div>
-              </DrawerContent>
-            </Drawer>
-          </div>
-
-          {/* Right - Download Button */}
-          <Button variant="secondary" className="px-4 py-2">
-            <Download className="h-4 w-4 mr-2" />
-            Download
-          </Button>
-        </div>
-      </div>
+      {/* Toolbar */}
+      <EditScreenToolbar
+        variant="mobile"
+        onBack={onBack}
+        versions={versions}
+        selectedVersion={selectedVersion}
+        onVersionSelect={setSelectedVersion}
+        onDownload={() => console.log('Download clicked')}
+        onPaintRoller={() => console.log('Paint roller clicked')}
+        onEraser={() => console.log('Eraser clicked')}
+      />
 
       {/* Main Content Area - Simplified Structure */}
       <div className="flex-1 flex flex-col p-4">
