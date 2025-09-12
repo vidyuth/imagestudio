@@ -161,11 +161,11 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       </div>
 
       {/* Main Content Area - Always show image and editing tools */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         {/* Image Display Area */}
-        <div className="flex-1 p-4">
+        <div className="flex-1 p-4 min-h-0">
           {beforeImage && afterImage ? (
-            <ScrollArea className="h-full w-full rounded-lg border">
+            <ScrollArea className="h-full w-full rounded-lg border max-h-full">
               <div className="min-h-full">
                 <ReactCompareSlider
                   itemOne={
