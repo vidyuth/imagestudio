@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { CornerUpLeft, Download, History, PaintRoller, Eraser } from 'lucide-react';
+import { CornerUpLeft, Download, History, PaintRoller, Eraser, Wand2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
+import { Input } from '../components/ui/input';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from '../components/ui/drawer';
 import { ScrollArea } from '../components/ui/scroll-area';
 import {
@@ -18,6 +19,7 @@ interface EditScreenMobileProps {
 
 export default function EditScreenMobile({ onBack, prompt = "", beforeImage = "", afterImage = "" }: EditScreenMobileProps) {
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
+  const [editPrompt, setEditPrompt] = useState<string>("");
 
   // Mock version data - in real app this would come from props/state
   const versions = [
@@ -198,6 +200,22 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
               )}
             </div>
           )}
+        </div>
+
+        {/* Prompt Composer Section */}
+        <div className="bg-card border-t border-border px-4 py-3 flex-shrink-0">
+          <div className="flex flex-col gap-3">
+            <Input
+              placeholder="Use the paintbrush to select an area on the photo"
+              value={editPrompt}
+              onChange={(e) => setEditPrompt(e.target.value)}
+              className="w-full bg-muted border-0 rounded-lg"
+            />
+            <Button variant="secondary" className="w-full">
+              <Wand2 className="h-4 w-4 mr-2" />
+              Update
+            </Button>
+          </div>
         </div>
       </div>
     </div>
