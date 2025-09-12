@@ -147,7 +147,7 @@ export default function EditScreen({
                   </CardDescription>
                 </CardHeader>
                 
-                <CardContent className="p-3 flex-grow flex flex-col items-center gap-2">
+                <CardContent className="p-3 flex flex-col items-center gap-2">
                   {/* Large Preview */}
                   <div className="w-full aspect-square relative bg-muted rounded-md overflow-hidden">
                     {versions[selectedVersion - 1]?.image ? (
@@ -164,7 +164,7 @@ export default function EditScreen({
                   </div>
                   
                   {/* Thumbnail Grid */}
-                  <div className="flex justify-between w-full mt-2">
+                  <div className="flex justify-between w-full mt-2 pb-4">
                     {versions.map((version) => (
                       <div key={version.id} className="flex flex-col items-center gap-1">
                         <button
