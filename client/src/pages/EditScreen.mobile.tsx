@@ -222,30 +222,17 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
                   </div>
                 </div>
               ) : (
-                /* Side-by-Side Mode - when overlay is OFF */
-                <div className="grid grid-cols-2 gap-0 min-h-full">
-                  {/* Before Image Section */}
-                  <div className="relative border-r border-border">
-                    <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                      Before
-                    </div>
-                    <img 
-                      src={beforeImage} 
-                      alt="Before" 
-                      className="w-full h-auto min-h-full object-cover"
-                    />
-                  </div>
+                /* Default Mode - Show only After image for editing */
+                <div className="relative min-h-full">
+                  <img 
+                    src={afterImage} 
+                    alt="Edited Image" 
+                    className="w-full h-auto min-h-full object-contain"
+                  />
                   
-                  {/* After Image Section */}
-                  <div className="relative">
-                    <div className="absolute top-2 left-2 z-10 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
-                      After
-                    </div>
-                    <img 
-                      src={afterImage} 
-                      alt="After" 
-                      className="w-full h-auto min-h-full object-cover"
-                    />
+                  {/* Simple label for the current edit */}
+                  <div className="absolute top-2 left-2 bg-black/70 text-white px-2 py-1 rounded text-xs font-medium">
+                    Current Edit
                   </div>
                 </div>
               )}
