@@ -54,22 +54,41 @@
 
 ##### Mobile Version (Responsive)
 - **Detection**: Automatic mobile detection using useIsMobile hook (768px breakpoint)
-- **Tab Bar Layout**: 
-  - Left: Back button (CornerUpLeft icon) for navigation
-  - Center: Before & After / Edit toggle buttons
-  - Right: History button (History icon) for version drawer
-- **Image Display**: Full-width central image area with proper touch interactions
-- **Tool Panels**: Floating Sheet components for editing tools
-  - Left Panel: Basic tools (Brightness, Contrast, Rotate, Crop) - Settings icon
-  - Right Panel: Advanced tools (Filters, Effects, Enhance, Adjust) - Palette icon
-  - Only visible in Edit mode to maintain clean UI
-- **History Drawer**: Bottom drawer component with:
-  - Title: "Reference Image"
+- **Streamlined Flow**: Direct transition from "Stage It" to unified edit interface
+- **Single Toolbar Layout**: 
+  - Left Group: Back button (CornerUpLeft) | Visual separator | Editing tools cluster
+    - Paint Roller icon (ghost button) - Future painting functionality
+    - Eraser icon (ghost button) - Future erasing functionality  
+    - Layers2 icon (toggle button) - Active state controls overlay mode
+    - History icon (ghost button) - Opens version history drawer
+  - Right: Primary Download button with icon and label
+- **Visual Hierarchy**: Clean separator line between back navigation and editing tools
+- **Overlay Comparison System**:
+  - **Toggle State**: Layers icon pressed = overlay mode active, shows opacity slider
+  - **Side-by-Side Mode**: Layers icon unpressed = traditional split comparison view
+  - **Opacity Control**: Bottom-positioned slider with "Before" and "After" labels for thumb-friendly access
+  - **Image Labels**: Dynamic percentage indicators in overlay mode (Before 30% | After 70%)
+- **Image Display**: Full-width ScrollArea with proper image containment
+  - Overlay rendering with proper opacity blend modes
+  - Responsive image scaling maintaining aspect ratios
+  - Touch-friendly zoom and pan capabilities
+- **Version History Drawer**: Bottom drawer preserving original functionality:
+  - Title: "Reference Image"  
   - Large preview area for selected version
   - 3 thumbnail grid (Edit #1, #2, #3) with selection states
-  - Interactive version switching with visual feedback
-  - Action buttons: Download, Edit this image, Delete
-- **Download Button**: Full-width bottom button for easy mobile access
+  - Prompt display showing original text for each version
+  - Action buttons: Download This Version, Edit this image, Delete
+- **Mobile Ergonomics**:
+  - Opacity slider positioned at bottom to avoid hand occlusion
+  - Touch targets minimum 44px for accessibility compliance
+  - Single-handed operation optimized layout
+  - No redundant header text to maximize image viewing space
+
+#### Streamlined User Flow
+- **Upload → Edit**: Direct transition eliminating tab confusion
+- **Unified Interface**: Both comparison and editing in single coherent view
+- **Tool Integration**: Essential editing tools always accessible without mode switching
+- **Progressive Enhancement**: Overlay toggle provides advanced comparison without complexity
 
 #### Version History System
 - **Maximum Versions**: Limited to 3 versions for optimal mobile UX
@@ -77,6 +96,14 @@
 - **Preview System**: Large preview updates when thumbnail is selected
 - **Prompt Display**: Shows original prompt for each version
 - **Selection States**: Visual feedback with primary border for active version
+- **Mobile Access**: History icon in unified toolbar opens bottom drawer interface
+
+#### Toolbar Design Philosophy
+- **Functional Grouping**: Visual separation between navigation, editing tools, and actions
+- **Icon Consistency**: Lucide icons throughout for visual coherence
+- **State Management**: Toggle buttons show clear active/inactive states
+- **Accessibility**: Ghost button styling for secondary actions, primary styling for main CTA
+- **Space Efficiency**: Single row eliminates redundant headers while maintaining tool access
 
 #### Footer
 - Simple placeholder footer maintaining layout balance
@@ -129,14 +156,15 @@
 - **Theming**: CSS custom properties integration with shadcn's design tokens
 
 ### Key Design Principles
-1. **Mobile-First**: Priority on mobile experience with progressive enhancement for desktop
-2. **Utility-First**: Prioritize functionality over decorative elements
+1. **Mobile-First**: Priority on mobile experience with streamlined single-screen workflow
+2. **Utility-First**: Essential functionality over decorative elements, unified toolbar approach
 3. **Consistency**: Maintain shadcn's design language with custom OKLCH color system
-4. **Clarity**: Clear visual hierarchy using spacing, typography, and color
-5. **Efficiency**: Streamlined workflow from upload to editing with minimal friction
-6. **Accessibility**: Proper contrast ratios, touch targets, and semantic markup
-7. **Performance**: Optimized animations and responsive images for all devices
-8. **Scalability**: Component-based architecture supporting future feature additions
+4. **Clarity**: Clear visual hierarchy using functional grouping and proper spacing
+5. **Efficiency**: Direct upload-to-edit flow with integrated comparison and editing tools
+6. **Accessibility**: Touch-friendly targets, clear states, proper contrast ratios
+7. **Performance**: Optimized overlay rendering and responsive image handling
+8. **Ergonomics**: Hand-friendly control positioning for optimal mobile usability
+9. **Progressive Enhancement**: Advanced features (overlay mode) discoverable but not required
 
 ### Color Accessibility
 - **OKLCH Benefits**: Perceptually uniform color space for better accessibility
@@ -145,7 +173,9 @@
 - **Theme Consistency**: Seamless light/dark mode transitions with proper contrast
 
 ### User Experience Patterns
-- **Progressive Disclosure**: Show tools only when needed (Edit mode)
-- **Contextual Actions**: Version-specific actions in history drawer
-- **Feedback Systems**: Visual confirmation for user actions and state changes
-- **Error Prevention**: Clear UI states and disabled states for invalid actions
+- **Streamlined Flow**: Single-screen editing eliminating mode confusion
+- **Progressive Disclosure**: Advanced features (overlay mode) discoverable through toggle
+- **Contextual Actions**: Version-specific actions accessible via history drawer
+- **Immediate Feedback**: Visual confirmation for tool states and opacity changes
+- **Touch Optimization**: Ergonomic control placement preventing hand occlusion
+- **Error Prevention**: Clear UI states and logical tool grouping
