@@ -44,7 +44,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
   ];
 
   return (
-    <div className="h-screen bg-background flex flex-col">
+    <div className="h-screen bg-background flex flex-col overflow-hidden">
       {/* Toolbar - Combined with back button */}
       <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -161,11 +161,11 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
       </div>
 
       {/* Main Content Area - Always show image and editing tools */}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex-1 flex flex-col overflow-hidden">
         {/* Image Display Area */}
-        <div className="flex-1 p-4 min-h-0">
+        <div className="flex-1 overflow-hidden p-4">
           {beforeImage && afterImage ? (
-            <ScrollArea className="h-full w-full rounded-lg border max-h-full">
+            <ScrollArea className="h-full w-full rounded-lg border">
               <div className="min-h-full">
                 <ReactCompareSlider
                   itemOne={
