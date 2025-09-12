@@ -7,6 +7,10 @@ import FileCard from "@/components/FileCard";
 import RoomPresets from "@/components/RoomPresets";
 import PromptComposer from "@/components/PromptComposer";
 import EditScreen from "@/pages/EditScreen";
+import { useImageEditing } from "../../../nano-backend/hooks/useImageGeneration";
+import { useAppStore } from "../../../nano-backend/store/useAppStore";
+import { blobToBase64 } from "../../../nano-backend/utils/imageUtils";
+import { config } from "@/config/env"; // Load environment config
 
 interface UploadedFile {
   file: File;
@@ -18,8 +22,10 @@ export default function Home() {
   const [selectedRoom, setSelectedRoom] = useState<string>('');
   const [currentScreen, setCurrentScreen] = useState<'upload' | 'edit'>('upload');
   const [prompt, setPrompt] = useState<string>('');
-
-  const handleFilesChange = (files: UploadedFile[]) => {
+  
+  // Use nano-backend AppStore and hooks
+  const { canvasImage, isGenerating, addUploadedImage, setCanvasImage } = useAppStore();
+  const { edit, isEditing, error } = useImageEditing();  const handleFilesChange = (files: UploadedFile[]) => {
     setUploadedFiles(files);
   };
 
@@ -32,9 +38,32 @@ export default function Home() {
     setSelectedRoom(roomId);
   };
 
-  const handleStageIt = (promptText: string) => {
+  const handleStageIt = async (promptText: string) => {
     setPrompt(promptText);
-    setCurrentScreen('edit');
+    
+    if (uploadedFiles.length === 0) {
+      console.error('No image uploaded');
+      return;
+    }
+
+    // Convert uploaded file to base64 and add to AppStore
+    const file = uploadedFiles[0].file;
+    try {
+      const base64Data = await blobToBase64(file);
+      const dataUrl = `data:${file.type};base64,${base64Data}`;
+      
+      // Set the uploaded image in AppStore for the editing hook to use
+      addUploadedImage(dataUrl);
+      setCanvasImage(dataUrl);
+      
+      // Trigger AI editing with the prompt
+      edit(promptText);
+      
+      // Navigate to edit screen
+      setCurrentScreen('edit');
+    } catch (error) {
+      console.error('Error processing image:', error);
+    }
   };
 
   const handleBackToUpload = () => {
@@ -104,7 +133,7 @@ export default function Home() {
                   onBack={handleBackToUpload}
                   prompt={prompt}
                   beforeImage={uploadedFiles[0]?.preview || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjFGNUY5Ii8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjNjM3NDhBIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPk9yaWdpbmFsIEltYWdlPC90ZXh0Pgo8L3N2Zz4='}
-                  afterImage='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkJFQ0IzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPkVkaXRlZCBJbWFnZTwvdGV4dD4KPC9zdmc+'
+                  afterImage={canvasImage || (isGenerating || isEditing ? 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkZFQjlDIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTYiPkdlbmVyYXRpbmcuLi48L3RleHQ+Cjwvc3ZnPg==' : 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDQwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSI0MDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRkJFQ0IzIi8+Cjx0ZXh0IHg9IjIwMCIgeT0iMTUwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBmaWxsPSIjOTI0MDBEIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTgiPkVkaXRlZCBJbWFnZTwvdGV4dD4KPC9zdmc+')}
                 />
               </motion.div>
             )}

@@ -15,7 +15,6 @@ export default function PromptComposer({ onStageIt, disabled = false }: PromptCo
   const handleSubmit = () => {
     if (prompt.trim()) {
       onStageIt(prompt);
-      console.log('Stage It clicked with prompt:', prompt);
     }
   };
 

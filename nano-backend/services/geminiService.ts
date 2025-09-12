@@ -1,7 +1,8 @@
 import { GoogleGenAI } from '@google/genai';
+import { config } from '../../client/src/config/env';
 
 // Note: In production, this should be handled via a backend proxy
-const API_KEY = import.meta.env.VITE_GEMINI_API_KEY || 'demo-key';
+const API_KEY = config.geminiApiKey || 'demo-key';
 const genAI = new GoogleGenAI({ apiKey: API_KEY });
 
 export interface GenerationRequest {
