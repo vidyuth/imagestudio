@@ -45,7 +45,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
   ];
 
   return (
-    <div className="h-screen bg-background flex flex-col overflow-hidden">
+    <div className="h-screen bg-background flex flex-col overflow-hidden pt-14 sm:pt-16">
       {/* Toolbar - Combined with back button */}
       <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
