@@ -6,6 +6,7 @@ import { ScrollArea } from '../components/ui/scroll-area';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
+  ReactCompareSliderHandle,
 } from 'react-compare-slider';
 
 interface EditScreenMobileProps {
@@ -42,11 +43,6 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
 
   return (
     <div className="h-screen bg-background flex flex-col">
-      {/* Debug indicator for mobile */}
-      <div className="fixed top-0 right-0 bg-green-500 text-white px-2 py-1 text-xs z-50">
-        MOBILE
-      </div>
-
       {/* Toolbar - Combined with back button */}
       <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
         <div className="flex items-center justify-between">
@@ -155,7 +151,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
           </div>
 
           {/* Right - Download Button */}
-          <Button className="bg-primary text-primary-foreground px-4 py-2">
+          <Button variant="secondary" className="px-4 py-2">
             <Download className="h-4 w-4 mr-2" />
             Download
           </Button>
@@ -184,6 +180,7 @@ export default function EditScreenMobile({ onBack, prompt = "", beforeImage = ""
                       style={{ objectFit: 'contain' }}
                     />
                   }
+                  handle={<ReactCompareSliderHandle style={{color: 'white'}}/>}
                 />
               </div>
             </ScrollArea>
