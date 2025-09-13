@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { X } from 'lucide-react';
+import { X, Wand2 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { Separator } from '../components/ui/separator';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle, CardDescription } from '../components/ui/card';
 import EditScreenToolbar from '../components/EditScreenToolbar';
 import EditScreenMobile from "./EditScreen.mobile";
+import MaskCanvas from '../components/MaskCanvas';
 import { useIsMobile } from "../hooks/use-mobile";
+import { useAppStore } from '../../../nano-backend/store/useAppStore';
+import { useImageEditing } from '../../../nano-backend/hooks/useImageGeneration';
 import {
   ReactCompareSlider,
   ReactCompareSliderImage,
@@ -42,6 +45,22 @@ export default function EditScreen({
   // Desktop version state
   const [selectedVersion, setSelectedVersion] = useState<number>(1);
   const [showHistory, setShowHistory] = useState<boolean>(true);
+  const [editPrompt, setEditPrompt] = useState<string>("");
+
+  // Use AppStore for mask mode
+  const { selectedTool } = useAppStore();
+  const { edit, isEditing } = useImageEditing();
+
+  // Determine if we're in mask mode
+  const isMaskMode = selectedTool === 'mask';
+
+  // Handle the Update button click
+  const handleUpdate = () => {
+    if (editPrompt.trim()) {
+      edit(editPrompt.trim());
+      setEditPrompt(""); // Clear prompt after sending
+    }
+  };
 
   // Mock version data
   const versions = [
@@ -91,24 +110,62 @@ export default function EditScreen({
 
             <Separator />
 
-            {/* Main Content Area - Only Image Comparison */}
+            {/* Main Content Area - Image Display */}
             <main className="flex flex-col gap-4">
               {/* Image Area */}
               <div className="aspect-video bg-card border border-border rounded-lg overflow-hidden">
-                <ReactCompareSlider
-                  itemOne={<ReactCompareSliderImage src={beforeImage} alt="Original image" />}
-                  itemTwo={<ReactCompareSliderImage src={afterImage} alt="Edited image" />}
-                  handle={
-                    <ReactCompareSliderHandle
-                      buttonStyle={{
-                        backdropFilter: undefined,
-                        background: 'white',
-                        border: 0,
-                        color: '#222',
-                      }}
-                    />
-                  }
-                />
+                {isMaskMode && afterImage ? (
+                  /* Mask Mode - Show only after image with painting canvas */
+                  <MaskCanvas 
+                    imageUrl={afterImage}
+                    className="w-full h-full"
+                  />
+                ) : (
+                  /* Normal Mode - Show before/after comparison */
+                  <ReactCompareSlider
+                    itemOne={<ReactCompareSliderImage src={beforeImage} alt="Original image" />}
+                    itemTwo={<ReactCompareSliderImage src={afterImage} alt="Edited image" />}
+                    handle={
+                      <ReactCompareSliderHandle
+                        buttonStyle={{
+                          backdropFilter: undefined,
+                          background: 'white',
+                          border: 0,
+                          color: '#222',
+                        }}
+                      />
+                    }
+                  />
+                )}
+              </div>
+
+              {/* Prompt Composer Section */}
+              <div className="flex flex-col gap-3">
+                {isMaskMode && (
+                  <div className="p-3 bg-muted/50 rounded-lg">
+                    <p className="text-sm text-center text-muted-foreground">
+                      Use the paintbrush to select an area on the photo
+                    </p>
+                  </div>
+                )}
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="Enter your prompt here..."
+                    value={editPrompt}
+                    onChange={(e) => setEditPrompt(e.target.value)}
+                    className="flex-1 px-4 py-3 bg-muted border-0 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary/20"
+                  />
+                  <Button 
+                    variant="default" 
+                    className="px-6" 
+                    onClick={handleUpdate}
+                    disabled={isEditing || !editPrompt.trim()}
+                  >
+                    <Wand2 className="h-4 w-4 mr-2" />
+                    {isEditing ? 'Updating...' : 'Update'}
+                  </Button>
+                </div>
               </div>
             </main>
           </div>

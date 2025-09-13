@@ -2,6 +2,7 @@ import React from 'react';
 import { CornerUpLeft, Download, History, PaintRoller, Eraser } from 'lucide-react';
 import { Button } from './ui/button';
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerTrigger } from './ui/drawer';
+import { useAppStore } from '../../../nano-backend/store/useAppStore';
 
 interface EditScreenToolbarProps {
   variant: 'mobile' | 'desktop';
@@ -35,6 +36,25 @@ export default function EditScreenToolbar({
   onVersionSelect = () => {}
 }: EditScreenToolbarProps) {
   
+  // Use AppStore for mask mode functionality
+  const { selectedTool, setSelectedTool, clearBrushStrokes } = useAppStore();
+  
+  const handlePaintRoller = () => {
+    // Toggle mask mode or call the original handler for compatibility
+    if (selectedTool === 'mask') {
+      setSelectedTool('edit'); // Exit mask mode
+    } else {
+      setSelectedTool('mask'); // Enter mask mode
+    }
+    onPaintRoller(); // Keep compatibility with existing handlers
+  };
+  
+  const handleEraser = () => {
+    // Clear brush strokes or call the original handler
+    clearBrushStrokes();
+    onEraser(); // Keep compatibility with existing handlers
+  };
+  
   if (variant === 'mobile') {
     return (
       <div className="bg-card border-b border-border px-4 py-3 flex-shrink-0">
@@ -54,11 +74,11 @@ export default function EditScreenToolbar({
             {/* Separator line */}
             <div className="h-6 w-px bg-border mx-1" />
             
-            <Button variant="ghost" size="sm" className="p-2" onClick={onPaintRoller}>
-              <PaintRoller className="h-4 w-4" />
+            <Button variant="ghost" size="sm" className="p-2" onClick={handlePaintRoller}>
+              <PaintRoller className={`h-4 w-4 ${selectedTool === 'mask' ? 'text-primary' : ''}`} />
             </Button>
             
-            <Button variant="ghost" size="sm" className="p-2" onClick={onEraser}>
+            <Button variant="ghost" size="sm" className="p-2" onClick={handleEraser}>
               <Eraser className="h-4 w-4" />
             </Button>
             
@@ -162,10 +182,10 @@ export default function EditScreenToolbar({
       
       {/* Centered Icons */}
       <div className="flex items-center gap-4 absolute left-1/2 transform -translate-x-1/2">
-        <Button variant="ghost" size="icon" aria-label="Paint Roller" onClick={onPaintRoller}>
-          <PaintRoller className="h-4 w-4" />
+        <Button variant="ghost" size="icon" aria-label="Paint Roller" onClick={handlePaintRoller}>
+          <PaintRoller className={`h-4 w-4 ${selectedTool === 'mask' ? 'text-primary' : ''}`} />
         </Button>
-        <Button variant="ghost" size="icon" aria-label="Eraser" onClick={onEraser}>
+        <Button variant="ghost" size="icon" aria-label="Eraser" onClick={handleEraser}>
           <Eraser className="h-4 w-4" />
         </Button>
         <Button 
